@@ -1,0 +1,372 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	delay
+  12               	delay:
+  13               	.LFB0:
+  14               		.file 1 "main.c"
+   1:main.c        **** #include <avr/io.h>
+   2:main.c        **** #include "gpio_init.h"
+   3:main.c        **** #define on  |=
+   4:main.c        **** #define of  &=~
+   5:main.c        **** void delay(int t)
+   6:main.c        **** {
+  15               		.loc 1 6 1
+  16               		.cfi_startproc
+  17 0000 CF93      		push r28
+  18               	.LCFI0:
+  19               		.cfi_def_cfa_offset 3
+  20               		.cfi_offset 28, -2
+  21 0002 DF93      		push r29
+  22               	.LCFI1:
+  23               		.cfi_def_cfa_offset 4
+  24               		.cfi_offset 29, -3
+  25 0004 00D0      		rcall .
+  26 0006 00D0      		rcall .
+  27 0008 00D0      		rcall .
+  28               	.LCFI2:
+  29               		.cfi_def_cfa_offset 10
+  30 000a CDB7      		in r28,__SP_L__
+  31 000c DEB7      		in r29,__SP_H__
+  32               	.LCFI3:
+  33               		.cfi_def_cfa_register 28
+  34               	/* prologue: function */
+  35               	/* frame size = 6 */
+  36               	/* stack size = 8 */
+  37               	.L__stack_usage = 8
+  38 000e 9E83      		std Y+6,r25
+  39 0010 8D83      		std Y+5,r24
+  40               	.LBB2:
+   7:main.c        **** 	for(int i=0;i<t;i++)
+  41               		.loc 1 7 10
+  42 0012 1A82      		std Y+2,__zero_reg__
+  43 0014 1982      		std Y+1,__zero_reg__
+  44               		.loc 1 7 2
+  45 0016 00C0      		rjmp .L2
+  46               	.L5:
+  47               	.LBB3:
+   8:main.c        **** 	{
+   9:main.c        **** 		for(int s=0;s<1536;s++)
+  48               		.loc 1 9 11
+  49 0018 1C82      		std Y+4,__zero_reg__
+  50 001a 1B82      		std Y+3,__zero_reg__
+  51               		.loc 1 9 3
+  52 001c 00C0      		rjmp .L3
+  53               	.L4:
+  10:main.c        **** 		{
+  11:main.c        **** 		asm("nop");	
+  54               		.loc 1 11 3 discriminator 3
+  55               	/* #APP */
+  56               	 ;  11 "main.c" 1
+  57 001e 0000      		nop
+  58               	 ;  0 "" 2
+   9:main.c        **** 		{
+  59               		.loc 1 9 23 discriminator 3
+  60               	/* #NOAPP */
+  61 0020 8B81      		ldd r24,Y+3
+  62 0022 9C81      		ldd r25,Y+4
+  63 0024 0196      		adiw r24,1
+  64 0026 9C83      		std Y+4,r25
+  65 0028 8B83      		std Y+3,r24
+  66               	.L3:
+   9:main.c        **** 		{
+  67               		.loc 1 9 3 discriminator 1
+  68 002a 8B81      		ldd r24,Y+3
+  69 002c 9C81      		ldd r25,Y+4
+  70 002e 8115      		cp r24,__zero_reg__
+  71 0030 9640      		sbci r25,6
+  72 0032 04F0      		brlt .L4
+  73               	.LBE3:
+   7:main.c        **** 	{
+  74               		.loc 1 7 19 discriminator 2
+  75 0034 8981      		ldd r24,Y+1
+  76 0036 9A81      		ldd r25,Y+2
+  77 0038 0196      		adiw r24,1
+  78 003a 9A83      		std Y+2,r25
+  79 003c 8983      		std Y+1,r24
+  80               	.L2:
+   7:main.c        **** 	{
+  81               		.loc 1 7 2 discriminator 1
+  82 003e 2981      		ldd r18,Y+1
+  83 0040 3A81      		ldd r19,Y+2
+  84 0042 8D81      		ldd r24,Y+5
+  85 0044 9E81      		ldd r25,Y+6
+  86 0046 2817      		cp r18,r24
+  87 0048 3907      		cpc r19,r25
+  88 004a 04F0      		brlt .L5
+  89               	.LBE2:
+  12:main.c        **** 		}
+  13:main.c        **** 	}
+  14:main.c        **** }
+  90               		.loc 1 14 1
+  91 004c 0000      		nop
+  92               	/* epilogue start */
+  93 004e 2696      		adiw r28,6
+  94 0050 0FB6      		in __tmp_reg__,__SREG__
+  95 0052 F894      		cli
+  96 0054 DEBF      		out __SP_H__,r29
+  97 0056 0FBE      		out __SREG__,__tmp_reg__
+  98 0058 CDBF      		out __SP_L__,r28
+  99 005a DF91      		pop r29
+ 100 005c CF91      		pop r28
+ 101 005e 0895      		ret
+ 102               		.cfi_endproc
+ 103               	.LFE0:
+ 105               	.global	main
+ 107               	main:
+ 108               	.LFB1:
+  15:main.c        **** void main(void)
+  16:main.c        **** {
+ 109               		.loc 1 16 1
+ 110               		.cfi_startproc
+ 111 0060 CF93      		push r28
+ 112               	.LCFI4:
+ 113               		.cfi_def_cfa_offset 3
+ 114               		.cfi_offset 28, -2
+ 115 0062 DF93      		push r29
+ 116               	.LCFI5:
+ 117               		.cfi_def_cfa_offset 4
+ 118               		.cfi_offset 29, -3
+ 119 0064 CDB7      		in r28,__SP_L__
+ 120 0066 DEB7      		in r29,__SP_H__
+ 121               	.LCFI6:
+ 122               		.cfi_def_cfa_register 28
+ 123               	/* prologue: function */
+ 124               	/* frame size = 0 */
+ 125               	/* stack size = 2 */
+ 126               	.L__stack_usage = 2
+  17:main.c        **** 	
+  18:main.c        **** 	DDRB=0xff;
+ 127               		.loc 1 18 2
+ 128 0068 84E2      		ldi r24,lo8(36)
+ 129 006a 90E0      		ldi r25,0
+ 130               		.loc 1 18 6
+ 131 006c 2FEF      		ldi r18,lo8(-1)
+ 132 006e FC01      		movw r30,r24
+ 133 0070 2083      		st Z,r18
+  19:main.c        ****     DDRC=0x00;
+ 134               		.loc 1 19 5
+ 135 0072 87E2      		ldi r24,lo8(39)
+ 136 0074 90E0      		ldi r25,0
+ 137               		.loc 1 19 9
+ 138 0076 FC01      		movw r30,r24
+ 139 0078 1082      		st Z,__zero_reg__
+  20:main.c        **** 	PORTB=0x00;
+ 140               		.loc 1 20 2
+ 141 007a 85E2      		ldi r24,lo8(37)
+ 142 007c 90E0      		ldi r25,0
+ 143               		.loc 1 20 7
+ 144 007e FC01      		movw r30,r24
+ 145 0080 1082      		st Z,__zero_reg__
+  21:main.c        **** 	
+  22:main.c        **** 	PORTB on (1<<5);
+ 146               		.loc 1 22 8
+ 147 0082 85E2      		ldi r24,lo8(37)
+ 148 0084 90E0      		ldi r25,0
+ 149 0086 FC01      		movw r30,r24
+ 150 0088 2081      		ld r18,Z
+ 151 008a 85E2      		ldi r24,lo8(37)
+ 152 008c 90E0      		ldi r25,0
+ 153 008e 2062      		ori r18,lo8(32)
+ 154 0090 FC01      		movw r30,r24
+ 155 0092 2083      		st Z,r18
+  23:main.c        ****     PORTB on (1<<4);
+ 156               		.loc 1 23 11
+ 157 0094 85E2      		ldi r24,lo8(37)
+ 158 0096 90E0      		ldi r25,0
+ 159 0098 FC01      		movw r30,r24
+ 160 009a 2081      		ld r18,Z
+ 161 009c 85E2      		ldi r24,lo8(37)
+ 162 009e 90E0      		ldi r25,0
+ 163 00a0 2061      		ori r18,lo8(16)
+ 164 00a2 FC01      		movw r30,r24
+ 165 00a4 2083      		st Z,r18
+  24:main.c        ****     PORTB of (1<<2);
+ 166               		.loc 1 24 11
+ 167 00a6 85E2      		ldi r24,lo8(37)
+ 168 00a8 90E0      		ldi r25,0
+ 169 00aa FC01      		movw r30,r24
+ 170 00ac 2081      		ld r18,Z
+ 171 00ae 85E2      		ldi r24,lo8(37)
+ 172 00b0 90E0      		ldi r25,0
+ 173 00b2 2B7F      		andi r18,lo8(-5)
+ 174 00b4 FC01      		movw r30,r24
+ 175 00b6 2083      		st Z,r18
+ 176               	.L10:
+  25:main.c        **** 	while(1)
+  26:main.c        **** 	{
+  27:main.c        **** 		if(PINC&(1<<2))
+ 177               		.loc 1 27 6
+ 178 00b8 86E2      		ldi r24,lo8(38)
+ 179 00ba 90E0      		ldi r25,0
+ 180 00bc FC01      		movw r30,r24
+ 181 00be 8081      		ld r24,Z
+ 182               		.loc 1 27 10
+ 183 00c0 882F      		mov r24,r24
+ 184 00c2 90E0      		ldi r25,0
+ 185 00c4 8470      		andi r24,4
+ 186 00c6 9927      		clr r25
+ 187               		.loc 1 27 5
+ 188 00c8 892B      		or r24,r25
+ 189 00ca 01F0      		breq .L7
+  28:main.c        ****         {
+  29:main.c        ****             PORTB on (1<<5);
+ 190               		.loc 1 29 19
+ 191 00cc 85E2      		ldi r24,lo8(37)
+ 192 00ce 90E0      		ldi r25,0
+ 193 00d0 FC01      		movw r30,r24
+ 194 00d2 2081      		ld r18,Z
+ 195 00d4 85E2      		ldi r24,lo8(37)
+ 196 00d6 90E0      		ldi r25,0
+ 197 00d8 2062      		ori r18,lo8(32)
+ 198 00da FC01      		movw r30,r24
+ 199 00dc 2083      		st Z,r18
+  30:main.c        ****             PORTB of (1<<4);
+ 200               		.loc 1 30 19
+ 201 00de 85E2      		ldi r24,lo8(37)
+ 202 00e0 90E0      		ldi r25,0
+ 203 00e2 FC01      		movw r30,r24
+ 204 00e4 2081      		ld r18,Z
+ 205 00e6 85E2      		ldi r24,lo8(37)
+ 206 00e8 90E0      		ldi r25,0
+ 207 00ea 2F7E      		andi r18,lo8(-17)
+ 208 00ec FC01      		movw r30,r24
+ 209 00ee 2083      		st Z,r18
+  31:main.c        ****             PORTB on (1<<2);
+ 210               		.loc 1 31 19
+ 211 00f0 85E2      		ldi r24,lo8(37)
+ 212 00f2 90E0      		ldi r25,0
+ 213 00f4 FC01      		movw r30,r24
+ 214 00f6 2081      		ld r18,Z
+ 215 00f8 85E2      		ldi r24,lo8(37)
+ 216 00fa 90E0      		ldi r25,0
+ 217 00fc 2460      		ori r18,lo8(4)
+ 218 00fe FC01      		movw r30,r24
+ 219 0100 2083      		st Z,r18
+ 220 0102 00C0      		rjmp .L10
+ 221               	.L7:
+  32:main.c        ****         }
+  33:main.c        ****         else if(PINC&(1<<1))
+ 222               		.loc 1 33 17
+ 223 0104 86E2      		ldi r24,lo8(38)
+ 224 0106 90E0      		ldi r25,0
+ 225 0108 FC01      		movw r30,r24
+ 226 010a 8081      		ld r24,Z
+ 227               		.loc 1 33 21
+ 228 010c 882F      		mov r24,r24
+ 229 010e 90E0      		ldi r25,0
+ 230 0110 8270      		andi r24,2
+ 231 0112 9927      		clr r25
+ 232               		.loc 1 33 16
+ 233 0114 892B      		or r24,r25
+ 234 0116 01F0      		breq .L9
+  34:main.c        ****         {
+  35:main.c        ****             PORTB on (1<<4);
+ 235               		.loc 1 35 19
+ 236 0118 85E2      		ldi r24,lo8(37)
+ 237 011a 90E0      		ldi r25,0
+ 238 011c FC01      		movw r30,r24
+ 239 011e 2081      		ld r18,Z
+ 240 0120 85E2      		ldi r24,lo8(37)
+ 241 0122 90E0      		ldi r25,0
+ 242 0124 2061      		ori r18,lo8(16)
+ 243 0126 FC01      		movw r30,r24
+ 244 0128 2083      		st Z,r18
+  36:main.c        ****             PORTB of (1<<5);
+ 245               		.loc 1 36 19
+ 246 012a 85E2      		ldi r24,lo8(37)
+ 247 012c 90E0      		ldi r25,0
+ 248 012e FC01      		movw r30,r24
+ 249 0130 2081      		ld r18,Z
+ 250 0132 85E2      		ldi r24,lo8(37)
+ 251 0134 90E0      		ldi r25,0
+ 252 0136 2F7D      		andi r18,lo8(-33)
+ 253 0138 FC01      		movw r30,r24
+ 254 013a 2083      		st Z,r18
+  37:main.c        ****             PORTB on (1<<2);
+ 255               		.loc 1 37 19
+ 256 013c 85E2      		ldi r24,lo8(37)
+ 257 013e 90E0      		ldi r25,0
+ 258 0140 FC01      		movw r30,r24
+ 259 0142 2081      		ld r18,Z
+ 260 0144 85E2      		ldi r24,lo8(37)
+ 261 0146 90E0      		ldi r25,0
+ 262 0148 2460      		ori r18,lo8(4)
+ 263 014a FC01      		movw r30,r24
+ 264 014c 2083      		st Z,r18
+ 265 014e 00C0      		rjmp .L10
+ 266               	.L9:
+  38:main.c        ****         }
+  39:main.c        ****         else if(PINC&(1<<0)) //reset
+ 267               		.loc 1 39 17
+ 268 0150 86E2      		ldi r24,lo8(38)
+ 269 0152 90E0      		ldi r25,0
+ 270 0154 FC01      		movw r30,r24
+ 271 0156 8081      		ld r24,Z
+ 272               		.loc 1 39 21
+ 273 0158 882F      		mov r24,r24
+ 274 015a 90E0      		ldi r25,0
+ 275 015c 8170      		andi r24,1
+ 276 015e 9927      		clr r25
+ 277               		.loc 1 39 16
+ 278 0160 892B      		or r24,r25
+ 279 0162 01F4      		brne .+2
+ 280 0164 00C0      		rjmp .L10
+  40:main.c        ****         {
+  41:main.c        ****             PORTB on (1<<5);
+ 281               		.loc 1 41 19
+ 282 0166 85E2      		ldi r24,lo8(37)
+ 283 0168 90E0      		ldi r25,0
+ 284 016a FC01      		movw r30,r24
+ 285 016c 2081      		ld r18,Z
+ 286 016e 85E2      		ldi r24,lo8(37)
+ 287 0170 90E0      		ldi r25,0
+ 288 0172 2062      		ori r18,lo8(32)
+ 289 0174 FC01      		movw r30,r24
+ 290 0176 2083      		st Z,r18
+  42:main.c        ****             PORTB on (1<<4);
+ 291               		.loc 1 42 19
+ 292 0178 85E2      		ldi r24,lo8(37)
+ 293 017a 90E0      		ldi r25,0
+ 294 017c FC01      		movw r30,r24
+ 295 017e 2081      		ld r18,Z
+ 296 0180 85E2      		ldi r24,lo8(37)
+ 297 0182 90E0      		ldi r25,0
+ 298 0184 2061      		ori r18,lo8(16)
+ 299 0186 FC01      		movw r30,r24
+ 300 0188 2083      		st Z,r18
+  43:main.c        ****             PORTB of (1<<2);
+ 301               		.loc 1 43 19
+ 302 018a 85E2      		ldi r24,lo8(37)
+ 303 018c 90E0      		ldi r25,0
+ 304 018e FC01      		movw r30,r24
+ 305 0190 2081      		ld r18,Z
+ 306 0192 85E2      		ldi r24,lo8(37)
+ 307 0194 90E0      		ldi r25,0
+ 308 0196 2B7F      		andi r18,lo8(-5)
+ 309 0198 FC01      		movw r30,r24
+ 310 019a 2083      		st Z,r18
+  27:main.c        ****         {
+ 311               		.loc 1 27 5
+ 312 019c 00C0      		rjmp .L10
+ 313               		.cfi_endproc
+ 314               	.LFE1:
+ 316               	.Letext0:
+ 317               		.file 2 "/usr/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccOUSv4R.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccOUSv4R.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccOUSv4R.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccOUSv4R.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccOUSv4R.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccOUSv4R.s:12     .text:0000000000000000 delay
+     /tmp/ccOUSv4R.s:107    .text:0000000000000060 main
+
+NO UNDEFINED SYMBOLS

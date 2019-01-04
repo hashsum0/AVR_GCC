@@ -1,0 +1,504 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	delay
+  12               	delay:
+  13               	.LFB0:
+  14               		.file 1 "main.c"
+   1:main.c        **** #include <avr/io.h>
+   2:main.c        **** #define SET_HI(port, bit) port |= (1<<bit)
+   3:main.c        **** #define SET_LO(port, bit) port &=~ (1<<bit)
+   4:main.c        **** #define READ_COM (PINC&(1<<5)) //пин данных 
+   5:main.c        **** #define SPULSE 100 //длинна стартового импульса
+   6:main.c        **** #define HPULSE 50  //длинна единици
+   7:main.c        **** #define LPULSE 25  //длинна нуля
+   8:main.c        **** 
+   9:main.c        **** void delay(int t)
+  10:main.c        **** {
+  15               		.loc 1 10 1
+  16               		.cfi_startproc
+  17 0000 CF93      		push r28
+  18               	.LCFI0:
+  19               		.cfi_def_cfa_offset 3
+  20               		.cfi_offset 28, -2
+  21 0002 DF93      		push r29
+  22               	.LCFI1:
+  23               		.cfi_def_cfa_offset 4
+  24               		.cfi_offset 29, -3
+  25 0004 00D0      		rcall .
+  26 0006 00D0      		rcall .
+  27 0008 00D0      		rcall .
+  28               	.LCFI2:
+  29               		.cfi_def_cfa_offset 10
+  30 000a CDB7      		in r28,__SP_L__
+  31 000c DEB7      		in r29,__SP_H__
+  32               	.LCFI3:
+  33               		.cfi_def_cfa_register 28
+  34               	/* prologue: function */
+  35               	/* frame size = 6 */
+  36               	/* stack size = 8 */
+  37               	.L__stack_usage = 8
+  38 000e 9E83      		std Y+6,r25
+  39 0010 8D83      		std Y+5,r24
+  40               	.LBB2:
+  11:main.c        **** 	for(int i=0;i<t;i++)
+  41               		.loc 1 11 10
+  42 0012 1A82      		std Y+2,__zero_reg__
+  43 0014 1982      		std Y+1,__zero_reg__
+  44               		.loc 1 11 2
+  45 0016 00C0      		rjmp .L2
+  46               	.L5:
+  47               	.LBB3:
+  12:main.c        **** 	{
+  13:main.c        **** 		for(int s=0;s<200;s++)//464-468uS (200 при 8000000мгц)
+  48               		.loc 1 13 11
+  49 0018 1C82      		std Y+4,__zero_reg__
+  50 001a 1B82      		std Y+3,__zero_reg__
+  51               		.loc 1 13 3
+  52 001c 00C0      		rjmp .L3
+  53               	.L4:
+  14:main.c        **** 		{
+  15:main.c        **** 		asm("nop");	
+  54               		.loc 1 15 3 discriminator 3
+  55               	/* #APP */
+  56               	 ;  15 "main.c" 1
+  57 001e 0000      		nop
+  58               	 ;  0 "" 2
+  13:main.c        **** 		{
+  59               		.loc 1 13 22 discriminator 3
+  60               	/* #NOAPP */
+  61 0020 8B81      		ldd r24,Y+3
+  62 0022 9C81      		ldd r25,Y+4
+  63 0024 0196      		adiw r24,1
+  64 0026 9C83      		std Y+4,r25
+  65 0028 8B83      		std Y+3,r24
+  66               	.L3:
+  13:main.c        **** 		{
+  67               		.loc 1 13 3 discriminator 1
+  68 002a 8B81      		ldd r24,Y+3
+  69 002c 9C81      		ldd r25,Y+4
+  70 002e 883C      		cpi r24,-56
+  71 0030 9105      		cpc r25,__zero_reg__
+  72 0032 04F0      		brlt .L4
+  73               	.LBE3:
+  11:main.c        **** 	{
+  74               		.loc 1 11 19 discriminator 2
+  75 0034 8981      		ldd r24,Y+1
+  76 0036 9A81      		ldd r25,Y+2
+  77 0038 0196      		adiw r24,1
+  78 003a 9A83      		std Y+2,r25
+  79 003c 8983      		std Y+1,r24
+  80               	.L2:
+  11:main.c        **** 	{
+  81               		.loc 1 11 2 discriminator 1
+  82 003e 2981      		ldd r18,Y+1
+  83 0040 3A81      		ldd r19,Y+2
+  84 0042 8D81      		ldd r24,Y+5
+  85 0044 9E81      		ldd r25,Y+6
+  86 0046 2817      		cp r18,r24
+  87 0048 3907      		cpc r19,r25
+  88 004a 04F0      		brlt .L5
+  89               	.LBE2:
+  16:main.c        **** 		}
+  17:main.c        **** 	}
+  18:main.c        **** }
+  90               		.loc 1 18 1
+  91 004c 0000      		nop
+  92               	/* epilogue start */
+  93 004e 2696      		adiw r28,6
+  94 0050 0FB6      		in __tmp_reg__,__SREG__
+  95 0052 F894      		cli
+  96 0054 DEBF      		out __SP_H__,r29
+  97 0056 0FBE      		out __SREG__,__tmp_reg__
+  98 0058 CDBF      		out __SP_L__,r28
+  99 005a DF91      		pop r29
+ 100 005c CF91      		pop r28
+ 101 005e 0895      		ret
+ 102               		.cfi_endproc
+ 103               	.LFE0:
+ 105               	.global	delta
+ 107               	delta:
+ 108               	.LFB1:
+  19:main.c        **** int delta(void){
+ 109               		.loc 1 19 16
+ 110               		.cfi_startproc
+ 111 0060 CF93      		push r28
+ 112               	.LCFI4:
+ 113               		.cfi_def_cfa_offset 3
+ 114               		.cfi_offset 28, -2
+ 115 0062 DF93      		push r29
+ 116               	.LCFI5:
+ 117               		.cfi_def_cfa_offset 4
+ 118               		.cfi_offset 29, -3
+ 119 0064 00D0      		rcall .
+ 120               	.LCFI6:
+ 121               		.cfi_def_cfa_offset 6
+ 122 0066 CDB7      		in r28,__SP_L__
+ 123 0068 DEB7      		in r29,__SP_H__
+ 124               	.LCFI7:
+ 125               		.cfi_def_cfa_register 28
+ 126               	/* prologue: function */
+ 127               	/* frame size = 2 */
+ 128               	/* stack size = 4 */
+ 129               	.L__stack_usage = 4
+  20:main.c        ****     int i=0;
+ 130               		.loc 1 20 9
+ 131 006a 1A82      		std Y+2,__zero_reg__
+ 132 006c 1982      		std Y+1,__zero_reg__
+  21:main.c        **** 
+  22:main.c        ****     while(!READ_COM);//ждем импульс
+ 133               		.loc 1 22 10
+ 134 006e 0000      		nop
+ 135               	.L7:
+ 136               		.loc 1 22 12 discriminator 1
+ 137 0070 86E2      		ldi r24,lo8(38)
+ 138 0072 90E0      		ldi r25,0
+ 139 0074 FC01      		movw r30,r24
+ 140 0076 8081      		ld r24,Z
+ 141 0078 882F      		mov r24,r24
+ 142 007a 90E0      		ldi r25,0
+ 143 007c 8072      		andi r24,32
+ 144 007e 9927      		clr r25
+ 145               		.loc 1 22 10 discriminator 1
+ 146 0080 892B      		or r24,r25
+ 147 0082 01F0      		breq .L7
+  23:main.c        **** 
+  24:main.c        ****     for(i=0;i<255;i++){     //отмеряем длительность импульса
+ 148               		.loc 1 24 10
+ 149 0084 1A82      		std Y+2,__zero_reg__
+ 150 0086 1982      		std Y+1,__zero_reg__
+ 151               		.loc 1 24 5
+ 152 0088 00C0      		rjmp .L8
+ 153               	.L11:
+  25:main.c        ****         if(!READ_COM) break;
+ 154               		.loc 1 25 13
+ 155 008a 86E2      		ldi r24,lo8(38)
+ 156 008c 90E0      		ldi r25,0
+ 157 008e FC01      		movw r30,r24
+ 158 0090 8081      		ld r24,Z
+ 159 0092 882F      		mov r24,r24
+ 160 0094 90E0      		ldi r25,0
+ 161 0096 8072      		andi r24,32
+ 162 0098 9927      		clr r25
+ 163               		.loc 1 25 11
+ 164 009a 892B      		or r24,r25
+ 165 009c 01F0      		breq .L13
+  26:main.c        ****         delay(1);
+ 166               		.loc 1 26 9 discriminator 2
+ 167 009e 81E0      		ldi r24,lo8(1)
+ 168 00a0 90E0      		ldi r25,0
+ 169 00a2 00D0      		rcall delay
+  24:main.c        ****         if(!READ_COM) break;
+ 170               		.loc 1 24 20 discriminator 2
+ 171 00a4 8981      		ldd r24,Y+1
+ 172 00a6 9A81      		ldd r25,Y+2
+ 173 00a8 0196      		adiw r24,1
+ 174 00aa 9A83      		std Y+2,r25
+ 175 00ac 8983      		std Y+1,r24
+ 176               	.L8:
+  24:main.c        ****         if(!READ_COM) break;
+ 177               		.loc 1 24 5 discriminator 1
+ 178 00ae 8981      		ldd r24,Y+1
+ 179 00b0 9A81      		ldd r25,Y+2
+ 180 00b2 8F3F      		cpi r24,-1
+ 181 00b4 9105      		cpc r25,__zero_reg__
+ 182 00b6 04F0      		brlt .L11
+ 183 00b8 00C0      		rjmp .L10
+ 184               	.L13:
+  25:main.c        ****         if(!READ_COM) break;
+ 185               		.loc 1 25 9
+ 186 00ba 0000      		nop
+ 187               	.L10:
+  27:main.c        ****     }
+  28:main.c        **** 
+  29:main.c        ****     return i;
+ 188               		.loc 1 29 12
+ 189 00bc 8981      		ldd r24,Y+1
+ 190 00be 9A81      		ldd r25,Y+2
+ 191               	/* epilogue start */
+  30:main.c        **** }
+ 192               		.loc 1 30 1
+ 193 00c0 0F90      		pop __tmp_reg__
+ 194 00c2 0F90      		pop __tmp_reg__
+ 195 00c4 DF91      		pop r29
+ 196 00c6 CF91      		pop r28
+ 197 00c8 0895      		ret
+ 198               		.cfi_endproc
+ 199               	.LFE1:
+ 201               	.global	main
+ 203               	main:
+ 204               	.LFB2:
+  31:main.c        **** 
+  32:main.c        **** int main(void){
+ 205               		.loc 1 32 15
+ 206               		.cfi_startproc
+ 207 00ca CF93      		push r28
+ 208               	.LCFI8:
+ 209               		.cfi_def_cfa_offset 3
+ 210               		.cfi_offset 28, -2
+ 211 00cc DF93      		push r29
+ 212               	.LCFI9:
+ 213               		.cfi_def_cfa_offset 4
+ 214               		.cfi_offset 29, -3
+ 215 00ce CDB7      		in r28,__SP_L__
+ 216 00d0 DEB7      		in r29,__SP_H__
+ 217               	.LCFI10:
+ 218               		.cfi_def_cfa_register 28
+ 219 00d2 2897      		sbiw r28,8
+ 220               	.LCFI11:
+ 221               		.cfi_def_cfa_offset 12
+ 222 00d4 0FB6      		in __tmp_reg__,__SREG__
+ 223 00d6 F894      		cli
+ 224 00d8 DEBF      		out __SP_H__,r29
+ 225 00da 0FBE      		out __SREG__,__tmp_reg__
+ 226 00dc CDBF      		out __SP_L__,r28
+ 227               	/* prologue: function */
+ 228               	/* frame size = 8 */
+ 229               	/* stack size = 10 */
+ 230               	.L__stack_usage = 10
+  33:main.c        ****     int buf=0x00;     //буфер где полученные биты собераются в б�
+ 231               		.loc 1 33 9
+ 232 00de 1A82      		std Y+2,__zero_reg__
+ 233 00e0 1982      		std Y+1,__zero_reg__
+  34:main.c        ****     int flag=0x00;    //флаг стартовый импульс получен следующи�
+ 234               		.loc 1 34 9
+ 235 00e2 1C82      		std Y+4,__zero_reg__
+ 236 00e4 1B82      		std Y+3,__zero_reg__
+  35:main.c        ****     int counter=3;    //счетчик принятых битов
+ 237               		.loc 1 35 9
+ 238 00e6 83E0      		ldi r24,lo8(3)
+ 239 00e8 90E0      		ldi r25,0
+ 240 00ea 9E83      		std Y+6,r25
+ 241 00ec 8D83      		std Y+5,r24
+  36:main.c        ****     int sendbit=0x00; //приемник
+ 242               		.loc 1 36 9
+ 243 00ee 1886      		std Y+8,__zero_reg__
+ 244 00f0 1F82      		std Y+7,__zero_reg__
+  37:main.c        ****     
+  38:main.c        ****     DDRC=0x00;    //порт на вход
+ 245               		.loc 1 38 5
+ 246 00f2 87E2      		ldi r24,lo8(39)
+ 247 00f4 90E0      		ldi r25,0
+ 248               		.loc 1 38 9
+ 249 00f6 FC01      		movw r30,r24
+ 250 00f8 1082      		st Z,__zero_reg__
+  39:main.c        ****     PORTC=0xff;
+ 251               		.loc 1 39 5
+ 252 00fa 88E2      		ldi r24,lo8(40)
+ 253 00fc 90E0      		ldi r25,0
+ 254               		.loc 1 39 10
+ 255 00fe 2FEF      		ldi r18,lo8(-1)
+ 256 0100 FC01      		movw r30,r24
+ 257 0102 2083      		st Z,r18
+  40:main.c        ****     DDRD=0xFC;    //порт на выход два младших бита исключены ин
+ 258               		.loc 1 40 5
+ 259 0104 8AE2      		ldi r24,lo8(42)
+ 260 0106 90E0      		ldi r25,0
+ 261               		.loc 1 40 9
+ 262 0108 2CEF      		ldi r18,lo8(-4)
+ 263 010a FC01      		movw r30,r24
+ 264 010c 2083      		st Z,r18
+  41:main.c        ****     PORTD=0x00;   //порт в ноль
+ 265               		.loc 1 41 5
+ 266 010e 8BE2      		ldi r24,lo8(43)
+ 267 0110 90E0      		ldi r25,0
+ 268               		.loc 1 41 10
+ 269 0112 FC01      		movw r30,r24
+ 270 0114 1082      		st Z,__zero_reg__
+  42:main.c        ****     DDRB=0xff;    //порт на выход
+ 271               		.loc 1 42 5
+ 272 0116 84E2      		ldi r24,lo8(36)
+ 273 0118 90E0      		ldi r25,0
+ 274               		.loc 1 42 9
+ 275 011a 2FEF      		ldi r18,lo8(-1)
+ 276 011c FC01      		movw r30,r24
+ 277 011e 2083      		st Z,r18
+  43:main.c        ****     PORTB=0x00;   //порт в ноль
+ 278               		.loc 1 43 5
+ 279 0120 85E2      		ldi r24,lo8(37)
+ 280 0122 90E0      		ldi r25,0
+ 281               		.loc 1 43 10
+ 282 0124 FC01      		movw r30,r24
+ 283 0126 1082      		st Z,__zero_reg__
+ 284               	.L20:
+  44:main.c        ****     while(1){
+  45:main.c        **** 
+  46:main.c        ****         
+  47:main.c        ****        sendbit=delta(); //получаем длинну импульса
+ 285               		.loc 1 47 16
+ 286 0128 00D0      		rcall delta
+ 287 012a 9887      		std Y+8,r25
+ 288 012c 8F83      		std Y+7,r24
+  48:main.c        **** 
+  49:main.c        ****         
+  50:main.c        ****         if(counter<3){//пока не приняли три бита
+ 289               		.loc 1 50 11
+ 290 012e 8D81      		ldd r24,Y+5
+ 291 0130 9E81      		ldd r25,Y+6
+ 292 0132 0397      		sbiw r24,3
+ 293 0134 04F4      		brge .L15
+  51:main.c        ****             
+  52:main.c        ****             if((sendbit>=48 && sendbit<=52) && flag==1){
+ 294               		.loc 1 52 15
+ 295 0136 8F81      		ldd r24,Y+7
+ 296 0138 9885      		ldd r25,Y+8
+ 297 013a C097      		sbiw r24,48
+ 298 013c 04F0      		brlt .L16
+ 299               		.loc 1 52 29 discriminator 1
+ 300 013e 8F81      		ldd r24,Y+7
+ 301 0140 9885      		ldd r25,Y+8
+ 302 0142 C597      		sbiw r24,53
+ 303 0144 04F4      		brge .L16
+ 304               		.loc 1 52 45 discriminator 2
+ 305 0146 8B81      		ldd r24,Y+3
+ 306 0148 9C81      		ldd r25,Y+4
+ 307 014a 0197      		sbiw r24,1
+ 308 014c 01F4      		brne .L16
+  53:main.c        ****                  buf |= 1<<counter++; //если длинна импульса ровна еден�
+ 309               		.loc 1 53 35
+ 310 014e 8D81      		ldd r24,Y+5
+ 311 0150 9E81      		ldd r25,Y+6
+ 312 0152 9C01      		movw r18,r24
+ 313 0154 2F5F      		subi r18,-1
+ 314 0156 3F4F      		sbci r19,-1
+ 315 0158 3E83      		std Y+6,r19
+ 316 015a 2D83      		std Y+5,r18
+ 317               		.loc 1 53 26
+ 318 015c 21E0      		ldi r18,lo8(1)
+ 319 015e 30E0      		ldi r19,0
+ 320 0160 A901      		movw r20,r18
+ 321 0162 00C0      		rjmp 2f
+ 322               		1:
+ 323 0164 440F      		lsl r20
+ 324 0166 551F      		rol r21
+ 325               		2:
+ 326 0168 8A95      		dec r24
+ 327 016a 02F4      		brpl 1b
+ 328 016c CA01      		movw r24,r20
+ 329               		.loc 1 53 22
+ 330 016e 2981      		ldd r18,Y+1
+ 331 0170 3A81      		ldd r19,Y+2
+ 332 0172 822B      		or r24,r18
+ 333 0174 932B      		or r25,r19
+ 334 0176 9A83      		std Y+2,r25
+ 335 0178 8983      		std Y+1,r24
+ 336               	.L16:
+  54:main.c        ****              }
+  55:main.c        ****             
+  56:main.c        ****             if((sendbit>=23 && sendbit<=27) && flag==1) counter++;//если длинна импу�
+ 337               		.loc 1 56 15
+ 338 017a 8F81      		ldd r24,Y+7
+ 339 017c 9885      		ldd r25,Y+8
+ 340 017e 4797      		sbiw r24,23
+ 341 0180 04F0      		brlt .L18
+ 342               		.loc 1 56 29 discriminator 1
+ 343 0182 8F81      		ldd r24,Y+7
+ 344 0184 9885      		ldd r25,Y+8
+ 345 0186 4C97      		sbiw r24,28
+ 346 0188 04F4      		brge .L18
+ 347               		.loc 1 56 45 discriminator 2
+ 348 018a 8B81      		ldd r24,Y+3
+ 349 018c 9C81      		ldd r25,Y+4
+ 350 018e 0197      		sbiw r24,1
+ 351 0190 01F4      		brne .L18
+ 352               		.loc 1 56 64 discriminator 3
+ 353 0192 8D81      		ldd r24,Y+5
+ 354 0194 9E81      		ldd r25,Y+6
+ 355 0196 0196      		adiw r24,1
+ 356 0198 9E83      		std Y+6,r25
+ 357 019a 8D83      		std Y+5,r24
+ 358 019c 00C0      		rjmp .L18
+ 359               	.L15:
+  57:main.c        ****         }
+  58:main.c        ****         else{//если counter равен или больше 3(принято три бита) т
+  59:main.c        ****             if(flag==1)
+ 360               		.loc 1 59 15
+ 361 019e 8B81      		ldd r24,Y+3
+ 362 01a0 9C81      		ldd r25,Y+4
+ 363 01a2 0197      		sbiw r24,1
+ 364 01a4 01F4      		brne .L18
+  60:main.c        ****             {
+  61:main.c        ****                 PORTD=buf<<2;
+ 365               		.loc 1 61 26
+ 366 01a6 2981      		ldd r18,Y+1
+ 367               		.loc 1 61 17
+ 368 01a8 8BE2      		ldi r24,lo8(43)
+ 369 01aa 90E0      		ldi r25,0
+ 370               		.loc 1 61 26
+ 371 01ac 220F      		lsl r18
+ 372 01ae 220F      		lsl r18
+ 373               		.loc 1 61 22
+ 374 01b0 FC01      		movw r30,r24
+ 375 01b2 2083      		st Z,r18
+  62:main.c        ****                 flag=0;
+ 376               		.loc 1 62 21
+ 377 01b4 1C82      		std Y+4,__zero_reg__
+ 378 01b6 1B82      		std Y+3,__zero_reg__
+  63:main.c        ****                 delay(100);
+ 379               		.loc 1 63 17
+ 380 01b8 84E6      		ldi r24,lo8(100)
+ 381 01ba 90E0      		ldi r25,0
+ 382 01bc 00D0      		rcall delay
+  64:main.c        ****                 PORTD=0x00;
+ 383               		.loc 1 64 17
+ 384 01be 8BE2      		ldi r24,lo8(43)
+ 385 01c0 90E0      		ldi r25,0
+ 386               		.loc 1 64 22
+ 387 01c2 FC01      		movw r30,r24
+ 388 01c4 1082      		st Z,__zero_reg__
+ 389               	.L18:
+  65:main.c        ****                 
+  66:main.c        ****             }
+  67:main.c        ****         }
+  68:main.c        **** 
+  69:main.c        ****         if(sendbit>=98 && sendbit<=102)flag=1, counter=0x00, buf=0x00;//если принят ст�
+ 390               		.loc 1 69 11
+ 391 01c6 8F81      		ldd r24,Y+7
+ 392 01c8 9885      		ldd r25,Y+8
+ 393 01ca 8236      		cpi r24,98
+ 394 01cc 9105      		cpc r25,__zero_reg__
+ 395 01ce 04F4      		brge .+2
+ 396 01d0 00C0      		rjmp .L20
+ 397               		.loc 1 69 24 discriminator 1
+ 398 01d2 8F81      		ldd r24,Y+7
+ 399 01d4 9885      		ldd r25,Y+8
+ 400 01d6 8736      		cpi r24,103
+ 401 01d8 9105      		cpc r25,__zero_reg__
+ 402 01da 04F0      		brlt .+2
+ 403 01dc 00C0      		rjmp .L20
+ 404               		.loc 1 69 44 discriminator 2
+ 405 01de 81E0      		ldi r24,lo8(1)
+ 406 01e0 90E0      		ldi r25,0
+ 407 01e2 9C83      		std Y+4,r25
+ 408 01e4 8B83      		std Y+3,r24
+ 409               		.loc 1 69 55 discriminator 2
+ 410 01e6 1E82      		std Y+6,__zero_reg__
+ 411 01e8 1D82      		std Y+5,__zero_reg__
+ 412               		.loc 1 69 65 discriminator 2
+ 413 01ea 1A82      		std Y+2,__zero_reg__
+ 414 01ec 1982      		std Y+1,__zero_reg__
+  47:main.c        **** 
+ 415               		.loc 1 47 15 discriminator 2
+ 416 01ee 00C0      		rjmp .L20
+ 417               		.cfi_endproc
+ 418               	.LFE2:
+ 420               	.Letext0:
+ 421               		.file 2 "/usr/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccTWQA5P.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccTWQA5P.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccTWQA5P.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccTWQA5P.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccTWQA5P.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccTWQA5P.s:12     .text:0000000000000000 delay
+     /tmp/ccTWQA5P.s:107    .text:0000000000000060 delta
+     /tmp/ccTWQA5P.s:203    .text:00000000000000ca main
+
+NO UNDEFINED SYMBOLS

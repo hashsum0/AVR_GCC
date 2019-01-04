@@ -1,0 +1,207 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	delay
+  12               	delay:
+  13               	.LFB0:
+  14               		.file 1 "main.c"
+   1:main.c        **** #include <avr/io.h>
+   2:main.c        **** 
+   3:main.c        **** 
+   4:main.c        **** void delay(int t)
+   5:main.c        **** {
+  15               		.loc 1 5 1
+  16               		.cfi_startproc
+  17 0000 CF93      		push r28
+  18               	.LCFI0:
+  19               		.cfi_def_cfa_offset 3
+  20               		.cfi_offset 28, -2
+  21 0002 DF93      		push r29
+  22               	.LCFI1:
+  23               		.cfi_def_cfa_offset 4
+  24               		.cfi_offset 29, -3
+  25 0004 00D0      		rcall .
+  26 0006 00D0      		rcall .
+  27 0008 00D0      		rcall .
+  28               	.LCFI2:
+  29               		.cfi_def_cfa_offset 10
+  30 000a CDB7      		in r28,__SP_L__
+  31 000c DEB7      		in r29,__SP_H__
+  32               	.LCFI3:
+  33               		.cfi_def_cfa_register 28
+  34               	/* prologue: function */
+  35               	/* frame size = 6 */
+  36               	/* stack size = 8 */
+  37               	.L__stack_usage = 8
+  38 000e 9E83      		std Y+6,r25
+  39 0010 8D83      		std Y+5,r24
+  40               	.LBB2:
+   6:main.c        **** 	for(int i=0;i<t;i++)
+  41               		.loc 1 6 10
+  42 0012 1A82      		std Y+2,__zero_reg__
+  43 0014 1982      		std Y+1,__zero_reg__
+  44               		.loc 1 6 2
+  45 0016 00C0      		rjmp .L2
+  46               	.L5:
+  47               	.LBB3:
+   7:main.c        **** 	{
+   8:main.c        **** 		for(int s=0;s<227;s++)//464-468uS (200 при 8000000мгц)
+  48               		.loc 1 8 11
+  49 0018 1C82      		std Y+4,__zero_reg__
+  50 001a 1B82      		std Y+3,__zero_reg__
+  51               		.loc 1 8 3
+  52 001c 00C0      		rjmp .L3
+  53               	.L4:
+   9:main.c        **** 		{
+  10:main.c        **** 		asm("nop");	
+  54               		.loc 1 10 3 discriminator 3
+  55               	/* #APP */
+  56               	 ;  10 "main.c" 1
+  57 001e 0000      		nop
+  58               	 ;  0 "" 2
+   8:main.c        **** 		{
+  59               		.loc 1 8 22 discriminator 3
+  60               	/* #NOAPP */
+  61 0020 8B81      		ldd r24,Y+3
+  62 0022 9C81      		ldd r25,Y+4
+  63 0024 0196      		adiw r24,1
+  64 0026 9C83      		std Y+4,r25
+  65 0028 8B83      		std Y+3,r24
+  66               	.L3:
+   8:main.c        **** 		{
+  67               		.loc 1 8 3 discriminator 1
+  68 002a 8B81      		ldd r24,Y+3
+  69 002c 9C81      		ldd r25,Y+4
+  70 002e 833E      		cpi r24,-29
+  71 0030 9105      		cpc r25,__zero_reg__
+  72 0032 04F0      		brlt .L4
+  73               	.LBE3:
+   6:main.c        **** 	{
+  74               		.loc 1 6 19 discriminator 2
+  75 0034 8981      		ldd r24,Y+1
+  76 0036 9A81      		ldd r25,Y+2
+  77 0038 0196      		adiw r24,1
+  78 003a 9A83      		std Y+2,r25
+  79 003c 8983      		std Y+1,r24
+  80               	.L2:
+   6:main.c        **** 	{
+  81               		.loc 1 6 2 discriminator 1
+  82 003e 2981      		ldd r18,Y+1
+  83 0040 3A81      		ldd r19,Y+2
+  84 0042 8D81      		ldd r24,Y+5
+  85 0044 9E81      		ldd r25,Y+6
+  86 0046 2817      		cp r18,r24
+  87 0048 3907      		cpc r19,r25
+  88 004a 04F0      		brlt .L5
+  89               	.LBE2:
+  11:main.c        **** 		}
+  12:main.c        **** 	}
+  13:main.c        **** }
+  90               		.loc 1 13 1
+  91 004c 0000      		nop
+  92               	/* epilogue start */
+  93 004e 2696      		adiw r28,6
+  94 0050 0FB6      		in __tmp_reg__,__SREG__
+  95 0052 F894      		cli
+  96 0054 DEBF      		out __SP_H__,r29
+  97 0056 0FBE      		out __SREG__,__tmp_reg__
+  98 0058 CDBF      		out __SP_L__,r28
+  99 005a DF91      		pop r29
+ 100 005c CF91      		pop r28
+ 101 005e 0895      		ret
+ 102               		.cfi_endproc
+ 103               	.LFE0:
+ 105               	.global	main
+ 107               	main:
+ 108               	.LFB1:
+  14:main.c        **** 
+  15:main.c        **** 
+  16:main.c        **** int main(void){
+ 109               		.loc 1 16 15
+ 110               		.cfi_startproc
+ 111 0060 CF93      		push r28
+ 112               	.LCFI4:
+ 113               		.cfi_def_cfa_offset 3
+ 114               		.cfi_offset 28, -2
+ 115 0062 DF93      		push r29
+ 116               	.LCFI5:
+ 117               		.cfi_def_cfa_offset 4
+ 118               		.cfi_offset 29, -3
+ 119 0064 CDB7      		in r28,__SP_L__
+ 120 0066 DEB7      		in r29,__SP_H__
+ 121               	.LCFI6:
+ 122               		.cfi_def_cfa_register 28
+ 123               	/* prologue: function */
+ 124               	/* frame size = 0 */
+ 125               	/* stack size = 2 */
+ 126               	.L__stack_usage = 2
+  17:main.c        ****     
+  18:main.c        ****     DDRD=0xFC;    //порт на выход
+ 127               		.loc 1 18 5
+ 128 0068 8AE2      		ldi r24,lo8(42)
+ 129 006a 90E0      		ldi r25,0
+ 130               		.loc 1 18 9
+ 131 006c 2CEF      		ldi r18,lo8(-4)
+ 132 006e FC01      		movw r30,r24
+ 133 0070 2083      		st Z,r18
+  19:main.c        ****     PORTD=0x00;   //порт в ноль
+ 134               		.loc 1 19 5
+ 135 0072 8BE2      		ldi r24,lo8(43)
+ 136 0074 90E0      		ldi r25,0
+ 137               		.loc 1 19 10
+ 138 0076 FC01      		movw r30,r24
+ 139 0078 1082      		st Z,__zero_reg__
+ 140               	.L7:
+  20:main.c        **** 	
+  21:main.c        ****     while(1)
+  22:main.c        ****     {
+  23:main.c        ****         
+  24:main.c        ****             PORTD=0xff;
+ 141               		.loc 1 24 13 discriminator 1
+ 142 007a 8BE2      		ldi r24,lo8(43)
+ 143 007c 90E0      		ldi r25,0
+ 144               		.loc 1 24 18 discriminator 1
+ 145 007e 2FEF      		ldi r18,lo8(-1)
+ 146 0080 FC01      		movw r30,r24
+ 147 0082 2083      		st Z,r18
+  25:main.c        ****             delay(100);
+ 148               		.loc 1 25 13 discriminator 1
+ 149 0084 84E6      		ldi r24,lo8(100)
+ 150 0086 90E0      		ldi r25,0
+ 151 0088 00D0      		rcall delay
+  26:main.c        ****             PORTD=0x00;
+ 152               		.loc 1 26 13 discriminator 1
+ 153 008a 8BE2      		ldi r24,lo8(43)
+ 154 008c 90E0      		ldi r25,0
+ 155               		.loc 1 26 18 discriminator 1
+ 156 008e FC01      		movw r30,r24
+ 157 0090 1082      		st Z,__zero_reg__
+  27:main.c        ****             delay(100);
+ 158               		.loc 1 27 13 discriminator 1
+ 159 0092 84E6      		ldi r24,lo8(100)
+ 160 0094 90E0      		ldi r25,0
+ 161 0096 00D0      		rcall delay
+  24:main.c        ****             delay(100);
+ 162               		.loc 1 24 18 discriminator 1
+ 163 0098 00C0      		rjmp .L7
+ 164               		.cfi_endproc
+ 165               	.LFE1:
+ 167               	.Letext0:
+ 168               		.file 2 "/usr/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/cce1beSC.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cce1beSC.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cce1beSC.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cce1beSC.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cce1beSC.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cce1beSC.s:12     .text:0000000000000000 delay
+     /tmp/cce1beSC.s:107    .text:0000000000000060 main
+
+NO UNDEFINED SYMBOLS

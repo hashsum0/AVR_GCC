@@ -1,0 +1,400 @@
+
+main.elf:     формат файла elf32-avr
+
+Разделы:
+Idx Name          Разм      VMA       LMA       Фа  смещ.  Выр.
+  0 .data         00000000  00800100  0000023a  000002ae  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         0000023a  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000011  00000000  00000000  000002ae  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000002c0  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000020  00000000  00000000  000002fc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   0000073a  00000000  00000000  0000031c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000064f  00000000  00000000  00000a56  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000002df  00000000  00000000  000010a5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000080  00000000  00000000  00001384  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    0000032c  00000000  00000000  00001404  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000000d7  00000000  00000000  00001730  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Дизассемблирование раздела .text:
+
+00000000 <__vectors>:
+   0:	19 c0       	rjmp	.+50     	; 0x34 <__ctors_end>
+   2:	20 c0       	rjmp	.+64     	; 0x44 <__bad_interrupt>
+   4:	1f c0       	rjmp	.+62     	; 0x44 <__bad_interrupt>
+   6:	1e c0       	rjmp	.+60     	; 0x44 <__bad_interrupt>
+   8:	1d c0       	rjmp	.+58     	; 0x44 <__bad_interrupt>
+   a:	1c c0       	rjmp	.+56     	; 0x44 <__bad_interrupt>
+   c:	1b c0       	rjmp	.+54     	; 0x44 <__bad_interrupt>
+   e:	1a c0       	rjmp	.+52     	; 0x44 <__bad_interrupt>
+  10:	19 c0       	rjmp	.+50     	; 0x44 <__bad_interrupt>
+  12:	18 c0       	rjmp	.+48     	; 0x44 <__bad_interrupt>
+  14:	17 c0       	rjmp	.+46     	; 0x44 <__bad_interrupt>
+  16:	16 c0       	rjmp	.+44     	; 0x44 <__bad_interrupt>
+  18:	15 c0       	rjmp	.+42     	; 0x44 <__bad_interrupt>
+  1a:	14 c0       	rjmp	.+40     	; 0x44 <__bad_interrupt>
+  1c:	13 c0       	rjmp	.+38     	; 0x44 <__bad_interrupt>
+  1e:	12 c0       	rjmp	.+36     	; 0x44 <__bad_interrupt>
+  20:	11 c0       	rjmp	.+34     	; 0x44 <__bad_interrupt>
+  22:	10 c0       	rjmp	.+32     	; 0x44 <__bad_interrupt>
+  24:	0f c0       	rjmp	.+30     	; 0x44 <__bad_interrupt>
+  26:	0e c0       	rjmp	.+28     	; 0x44 <__bad_interrupt>
+  28:	0d c0       	rjmp	.+26     	; 0x44 <__bad_interrupt>
+  2a:	0c c0       	rjmp	.+24     	; 0x44 <__bad_interrupt>
+  2c:	0b c0       	rjmp	.+22     	; 0x44 <__bad_interrupt>
+  2e:	0a c0       	rjmp	.+20     	; 0x44 <__bad_interrupt>
+  30:	09 c0       	rjmp	.+18     	; 0x44 <__bad_interrupt>
+  32:	08 c0       	rjmp	.+16     	; 0x44 <__bad_interrupt>
+
+00000034 <__ctors_end>:
+  34:	11 24       	eor	r1, r1
+  36:	1f be       	out	0x3f, r1	; 63
+  38:	cf ef       	ldi	r28, 0xFF	; 255
+  3a:	d4 e0       	ldi	r29, 0x04	; 4
+  3c:	de bf       	out	0x3e, r29	; 62
+  3e:	cd bf       	out	0x3d, r28	; 61
+  40:	67 d0       	rcall	.+206    	; 0x110 <main>
+  42:	f9 c0       	rjmp	.+498    	; 0x236 <_exit>
+
+00000044 <__bad_interrupt>:
+  44:	dd cf       	rjmp	.-70     	; 0x0 <__vectors>
+
+00000046 <delay>:
+#define SPULSE 100 //длинна стартового импульса
+#define HPULSE 50  //длинна единици
+#define LPULSE 25  //длинна нуля
+
+void delay(int t)
+{
+  46:	cf 93       	push	r28
+  48:	df 93       	push	r29
+  4a:	00 d0       	rcall	.+0      	; 0x4c <delay+0x6>
+  4c:	00 d0       	rcall	.+0      	; 0x4e <delay+0x8>
+  4e:	00 d0       	rcall	.+0      	; 0x50 <delay+0xa>
+  50:	cd b7       	in	r28, 0x3d	; 61
+  52:	de b7       	in	r29, 0x3e	; 62
+  54:	9e 83       	std	Y+6, r25	; 0x06
+  56:	8d 83       	std	Y+5, r24	; 0x05
+	for(int i=0;i<t;i++)
+  58:	1a 82       	std	Y+2, r1	; 0x02
+  5a:	19 82       	std	Y+1, r1	; 0x01
+  5c:	13 c0       	rjmp	.+38     	; 0x84 <delay+0x3e>
+	{
+		for(int s=0;s<200;s++)//464-468uS (200 при 8000000мгц)
+  5e:	1c 82       	std	Y+4, r1	; 0x04
+  60:	1b 82       	std	Y+3, r1	; 0x03
+  62:	06 c0       	rjmp	.+12     	; 0x70 <delay+0x2a>
+		{
+		asm("nop");	
+  64:	00 00       	nop
+		for(int s=0;s<200;s++)//464-468uS (200 при 8000000мгц)
+  66:	8b 81       	ldd	r24, Y+3	; 0x03
+  68:	9c 81       	ldd	r25, Y+4	; 0x04
+  6a:	01 96       	adiw	r24, 0x01	; 1
+  6c:	9c 83       	std	Y+4, r25	; 0x04
+  6e:	8b 83       	std	Y+3, r24	; 0x03
+  70:	8b 81       	ldd	r24, Y+3	; 0x03
+  72:	9c 81       	ldd	r25, Y+4	; 0x04
+  74:	88 3c       	cpi	r24, 0xC8	; 200
+  76:	91 05       	cpc	r25, r1
+  78:	ac f3       	brlt	.-22     	; 0x64 <delay+0x1e>
+	for(int i=0;i<t;i++)
+  7a:	89 81       	ldd	r24, Y+1	; 0x01
+  7c:	9a 81       	ldd	r25, Y+2	; 0x02
+  7e:	01 96       	adiw	r24, 0x01	; 1
+  80:	9a 83       	std	Y+2, r25	; 0x02
+  82:	89 83       	std	Y+1, r24	; 0x01
+  84:	29 81       	ldd	r18, Y+1	; 0x01
+  86:	3a 81       	ldd	r19, Y+2	; 0x02
+  88:	8d 81       	ldd	r24, Y+5	; 0x05
+  8a:	9e 81       	ldd	r25, Y+6	; 0x06
+  8c:	28 17       	cp	r18, r24
+  8e:	39 07       	cpc	r19, r25
+  90:	34 f3       	brlt	.-52     	; 0x5e <delay+0x18>
+		}
+	}
+}
+  92:	00 00       	nop
+  94:	26 96       	adiw	r28, 0x06	; 6
+  96:	0f b6       	in	r0, 0x3f	; 63
+  98:	f8 94       	cli
+  9a:	de bf       	out	0x3e, r29	; 62
+  9c:	0f be       	out	0x3f, r0	; 63
+  9e:	cd bf       	out	0x3d, r28	; 61
+  a0:	df 91       	pop	r29
+  a2:	cf 91       	pop	r28
+  a4:	08 95       	ret
+
+000000a6 <delta>:
+int delta(void){
+  a6:	cf 93       	push	r28
+  a8:	df 93       	push	r29
+  aa:	00 d0       	rcall	.+0      	; 0xac <delta+0x6>
+  ac:	cd b7       	in	r28, 0x3d	; 61
+  ae:	de b7       	in	r29, 0x3e	; 62
+    int i=0;
+  b0:	1a 82       	std	Y+2, r1	; 0x02
+  b2:	19 82       	std	Y+1, r1	; 0x01
+
+    while(!READ_COM);//ждем импульс
+  b4:	00 00       	nop
+  b6:	86 e2       	ldi	r24, 0x26	; 38
+  b8:	90 e0       	ldi	r25, 0x00	; 0
+  ba:	fc 01       	movw	r30, r24
+  bc:	80 81       	ld	r24, Z
+  be:	88 2f       	mov	r24, r24
+  c0:	90 e0       	ldi	r25, 0x00	; 0
+  c2:	80 72       	andi	r24, 0x20	; 32
+  c4:	99 27       	eor	r25, r25
+  c6:	89 2b       	or	r24, r25
+  c8:	b1 f3       	breq	.-20     	; 0xb6 <delta+0x10>
+
+    for(i=0;i<255;i++){     //отмеряем длительность импульса
+  ca:	1a 82       	std	Y+2, r1	; 0x02
+  cc:	19 82       	std	Y+1, r1	; 0x01
+  ce:	12 c0       	rjmp	.+36     	; 0xf4 <delta+0x4e>
+        if(!READ_COM) break;
+  d0:	86 e2       	ldi	r24, 0x26	; 38
+  d2:	90 e0       	ldi	r25, 0x00	; 0
+  d4:	fc 01       	movw	r30, r24
+  d6:	80 81       	ld	r24, Z
+  d8:	88 2f       	mov	r24, r24
+  da:	90 e0       	ldi	r25, 0x00	; 0
+  dc:	80 72       	andi	r24, 0x20	; 32
+  de:	99 27       	eor	r25, r25
+  e0:	89 2b       	or	r24, r25
+  e2:	71 f0       	breq	.+28     	; 0x100 <delta+0x5a>
+        delay(1);
+  e4:	81 e0       	ldi	r24, 0x01	; 1
+  e6:	90 e0       	ldi	r25, 0x00	; 0
+  e8:	ae df       	rcall	.-164    	; 0x46 <delay>
+    for(i=0;i<255;i++){     //отмеряем длительность импульса
+  ea:	89 81       	ldd	r24, Y+1	; 0x01
+  ec:	9a 81       	ldd	r25, Y+2	; 0x02
+  ee:	01 96       	adiw	r24, 0x01	; 1
+  f0:	9a 83       	std	Y+2, r25	; 0x02
+  f2:	89 83       	std	Y+1, r24	; 0x01
+  f4:	89 81       	ldd	r24, Y+1	; 0x01
+  f6:	9a 81       	ldd	r25, Y+2	; 0x02
+  f8:	8f 3f       	cpi	r24, 0xFF	; 255
+  fa:	91 05       	cpc	r25, r1
+  fc:	4c f3       	brlt	.-46     	; 0xd0 <delta+0x2a>
+  fe:	01 c0       	rjmp	.+2      	; 0x102 <delta+0x5c>
+        if(!READ_COM) break;
+ 100:	00 00       	nop
+    }
+
+    return i;
+ 102:	89 81       	ldd	r24, Y+1	; 0x01
+ 104:	9a 81       	ldd	r25, Y+2	; 0x02
+}
+ 106:	0f 90       	pop	r0
+ 108:	0f 90       	pop	r0
+ 10a:	df 91       	pop	r29
+ 10c:	cf 91       	pop	r28
+ 10e:	08 95       	ret
+
+00000110 <main>:
+
+int main(void){
+ 110:	cf 93       	push	r28
+ 112:	df 93       	push	r29
+ 114:	cd b7       	in	r28, 0x3d	; 61
+ 116:	de b7       	in	r29, 0x3e	; 62
+ 118:	28 97       	sbiw	r28, 0x08	; 8
+ 11a:	0f b6       	in	r0, 0x3f	; 63
+ 11c:	f8 94       	cli
+ 11e:	de bf       	out	0x3e, r29	; 62
+ 120:	0f be       	out	0x3f, r0	; 63
+ 122:	cd bf       	out	0x3d, r28	; 61
+    int buf=0x00;     //буфер где полученные биты собераются в байт
+ 124:	1a 82       	std	Y+2, r1	; 0x02
+ 126:	19 82       	std	Y+1, r1	; 0x01
+    int flag=0x00;    //флаг стартовый импульс получен следующие три записывать в buf
+ 128:	1c 82       	std	Y+4, r1	; 0x04
+ 12a:	1b 82       	std	Y+3, r1	; 0x03
+    int counter=3;    //счетчик принятых битов
+ 12c:	83 e0       	ldi	r24, 0x03	; 3
+ 12e:	90 e0       	ldi	r25, 0x00	; 0
+ 130:	9e 83       	std	Y+6, r25	; 0x06
+ 132:	8d 83       	std	Y+5, r24	; 0x05
+    int sendbit=0x00; //приемник
+ 134:	18 86       	std	Y+8, r1	; 0x08
+ 136:	1f 82       	std	Y+7, r1	; 0x07
+    
+    DDRC=0x00;    //порт на вход
+ 138:	87 e2       	ldi	r24, 0x27	; 39
+ 13a:	90 e0       	ldi	r25, 0x00	; 0
+ 13c:	fc 01       	movw	r30, r24
+ 13e:	10 82       	st	Z, r1
+    PORTC=0xff;
+ 140:	88 e2       	ldi	r24, 0x28	; 40
+ 142:	90 e0       	ldi	r25, 0x00	; 0
+ 144:	2f ef       	ldi	r18, 0xFF	; 255
+ 146:	fc 01       	movw	r30, r24
+ 148:	20 83       	st	Z, r18
+    DDRD=0xFC;    //порт на выход два младших бита исключены иначе камень не стартует
+ 14a:	8a e2       	ldi	r24, 0x2A	; 42
+ 14c:	90 e0       	ldi	r25, 0x00	; 0
+ 14e:	2c ef       	ldi	r18, 0xFC	; 252
+ 150:	fc 01       	movw	r30, r24
+ 152:	20 83       	st	Z, r18
+    PORTD=0x00;   //порт в ноль
+ 154:	8b e2       	ldi	r24, 0x2B	; 43
+ 156:	90 e0       	ldi	r25, 0x00	; 0
+ 158:	fc 01       	movw	r30, r24
+ 15a:	10 82       	st	Z, r1
+    DDRB=0xff;    //порт на выход
+ 15c:	84 e2       	ldi	r24, 0x24	; 36
+ 15e:	90 e0       	ldi	r25, 0x00	; 0
+ 160:	2f ef       	ldi	r18, 0xFF	; 255
+ 162:	fc 01       	movw	r30, r24
+ 164:	20 83       	st	Z, r18
+    PORTB=0x00;   //порт в ноль
+ 166:	85 e2       	ldi	r24, 0x25	; 37
+ 168:	90 e0       	ldi	r25, 0x00	; 0
+ 16a:	fc 01       	movw	r30, r24
+ 16c:	10 82       	st	Z, r1
+    while(1){
+
+        
+       sendbit=delta(); //получаем длинну импульса
+ 16e:	9b df       	rcall	.-202    	; 0xa6 <delta>
+ 170:	98 87       	std	Y+8, r25	; 0x08
+ 172:	8f 83       	std	Y+7, r24	; 0x07
+
+        
+        if(counter<3){//пока не приняли три бита
+ 174:	8d 81       	ldd	r24, Y+5	; 0x05
+ 176:	9e 81       	ldd	r25, Y+6	; 0x06
+ 178:	03 97       	sbiw	r24, 0x03	; 3
+ 17a:	a4 f5       	brge	.+104    	; 0x1e4 <main+0xd4>
+            
+            if((sendbit>=48 && sendbit<=52) && flag==1){
+ 17c:	8f 81       	ldd	r24, Y+7	; 0x07
+ 17e:	98 85       	ldd	r25, Y+8	; 0x08
+ 180:	c0 97       	sbiw	r24, 0x30	; 48
+ 182:	f4 f0       	brlt	.+60     	; 0x1c0 <main+0xb0>
+ 184:	8f 81       	ldd	r24, Y+7	; 0x07
+ 186:	98 85       	ldd	r25, Y+8	; 0x08
+ 188:	c5 97       	sbiw	r24, 0x35	; 53
+ 18a:	d4 f4       	brge	.+52     	; 0x1c0 <main+0xb0>
+ 18c:	8b 81       	ldd	r24, Y+3	; 0x03
+ 18e:	9c 81       	ldd	r25, Y+4	; 0x04
+ 190:	01 97       	sbiw	r24, 0x01	; 1
+ 192:	b1 f4       	brne	.+44     	; 0x1c0 <main+0xb0>
+                 buf |= 1<<counter++; //если длинна импульса ровна еденице то записываем ее в переменную в бит номер counter, инкрементируем counter
+ 194:	8d 81       	ldd	r24, Y+5	; 0x05
+ 196:	9e 81       	ldd	r25, Y+6	; 0x06
+ 198:	9c 01       	movw	r18, r24
+ 19a:	2f 5f       	subi	r18, 0xFF	; 255
+ 19c:	3f 4f       	sbci	r19, 0xFF	; 255
+ 19e:	3e 83       	std	Y+6, r19	; 0x06
+ 1a0:	2d 83       	std	Y+5, r18	; 0x05
+ 1a2:	21 e0       	ldi	r18, 0x01	; 1
+ 1a4:	30 e0       	ldi	r19, 0x00	; 0
+ 1a6:	a9 01       	movw	r20, r18
+ 1a8:	02 c0       	rjmp	.+4      	; 0x1ae <main+0x9e>
+ 1aa:	44 0f       	add	r20, r20
+ 1ac:	55 1f       	adc	r21, r21
+ 1ae:	8a 95       	dec	r24
+ 1b0:	e2 f7       	brpl	.-8      	; 0x1aa <main+0x9a>
+ 1b2:	ca 01       	movw	r24, r20
+ 1b4:	29 81       	ldd	r18, Y+1	; 0x01
+ 1b6:	3a 81       	ldd	r19, Y+2	; 0x02
+ 1b8:	82 2b       	or	r24, r18
+ 1ba:	93 2b       	or	r25, r19
+ 1bc:	9a 83       	std	Y+2, r25	; 0x02
+ 1be:	89 83       	std	Y+1, r24	; 0x01
+             }
+            
+            if((sendbit>=23 && sendbit<=27) && flag==1) counter++;//если длинна импульса ровна нулю то просто инкрементируем counter
+ 1c0:	8f 81       	ldd	r24, Y+7	; 0x07
+ 1c2:	98 85       	ldd	r25, Y+8	; 0x08
+ 1c4:	47 97       	sbiw	r24, 0x17	; 23
+ 1c6:	14 f1       	brlt	.+68     	; 0x20c <main+0xfc>
+ 1c8:	8f 81       	ldd	r24, Y+7	; 0x07
+ 1ca:	98 85       	ldd	r25, Y+8	; 0x08
+ 1cc:	4c 97       	sbiw	r24, 0x1c	; 28
+ 1ce:	f4 f4       	brge	.+60     	; 0x20c <main+0xfc>
+ 1d0:	8b 81       	ldd	r24, Y+3	; 0x03
+ 1d2:	9c 81       	ldd	r25, Y+4	; 0x04
+ 1d4:	01 97       	sbiw	r24, 0x01	; 1
+ 1d6:	d1 f4       	brne	.+52     	; 0x20c <main+0xfc>
+ 1d8:	8d 81       	ldd	r24, Y+5	; 0x05
+ 1da:	9e 81       	ldd	r25, Y+6	; 0x06
+ 1dc:	01 96       	adiw	r24, 0x01	; 1
+ 1de:	9e 83       	std	Y+6, r25	; 0x06
+ 1e0:	8d 83       	std	Y+5, r24	; 0x05
+ 1e2:	14 c0       	rjmp	.+40     	; 0x20c <main+0xfc>
+        }
+        else{//если counter равен или больше 3(принято три бита) то выводим переменную в PORTD и сбрасываем флаг
+            if(flag==1)
+ 1e4:	8b 81       	ldd	r24, Y+3	; 0x03
+ 1e6:	9c 81       	ldd	r25, Y+4	; 0x04
+ 1e8:	01 97       	sbiw	r24, 0x01	; 1
+ 1ea:	81 f4       	brne	.+32     	; 0x20c <main+0xfc>
+            {
+                PORTD=buf<<2;
+ 1ec:	29 81       	ldd	r18, Y+1	; 0x01
+ 1ee:	8b e2       	ldi	r24, 0x2B	; 43
+ 1f0:	90 e0       	ldi	r25, 0x00	; 0
+ 1f2:	22 0f       	add	r18, r18
+ 1f4:	22 0f       	add	r18, r18
+ 1f6:	fc 01       	movw	r30, r24
+ 1f8:	20 83       	st	Z, r18
+                flag=0;
+ 1fa:	1c 82       	std	Y+4, r1	; 0x04
+ 1fc:	1b 82       	std	Y+3, r1	; 0x03
+                delay(100);
+ 1fe:	84 e6       	ldi	r24, 0x64	; 100
+ 200:	90 e0       	ldi	r25, 0x00	; 0
+ 202:	21 df       	rcall	.-446    	; 0x46 <delay>
+                PORTD=0x00;
+ 204:	8b e2       	ldi	r24, 0x2B	; 43
+ 206:	90 e0       	ldi	r25, 0x00	; 0
+ 208:	fc 01       	movw	r30, r24
+ 20a:	10 82       	st	Z, r1
+                
+            }
+        }
+
+        if(sendbit>=98 && sendbit<=102)flag=1, counter=0x00, buf=0x00;//если принят стартовый импульс устанавливаем флаг и чистим все остальное
+ 20c:	8f 81       	ldd	r24, Y+7	; 0x07
+ 20e:	98 85       	ldd	r25, Y+8	; 0x08
+ 210:	82 36       	cpi	r24, 0x62	; 98
+ 212:	91 05       	cpc	r25, r1
+ 214:	0c f4       	brge	.+2      	; 0x218 <main+0x108>
+ 216:	ab cf       	rjmp	.-170    	; 0x16e <main+0x5e>
+ 218:	8f 81       	ldd	r24, Y+7	; 0x07
+ 21a:	98 85       	ldd	r25, Y+8	; 0x08
+ 21c:	87 36       	cpi	r24, 0x67	; 103
+ 21e:	91 05       	cpc	r25, r1
+ 220:	0c f0       	brlt	.+2      	; 0x224 <main+0x114>
+ 222:	a5 cf       	rjmp	.-182    	; 0x16e <main+0x5e>
+ 224:	81 e0       	ldi	r24, 0x01	; 1
+ 226:	90 e0       	ldi	r25, 0x00	; 0
+ 228:	9c 83       	std	Y+4, r25	; 0x04
+ 22a:	8b 83       	std	Y+3, r24	; 0x03
+ 22c:	1e 82       	std	Y+6, r1	; 0x06
+ 22e:	1d 82       	std	Y+5, r1	; 0x05
+ 230:	1a 82       	std	Y+2, r1	; 0x02
+ 232:	19 82       	std	Y+1, r1	; 0x01
+       sendbit=delta(); //получаем длинну импульса
+ 234:	9c cf       	rjmp	.-200    	; 0x16e <main+0x5e>
+
+00000236 <_exit>:
+ 236:	f8 94       	cli
+
+00000238 <__stop_program>:
+ 238:	ff cf       	rjmp	.-2      	; 0x238 <__stop_program>

@@ -1,0 +1,134 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	delay
+  12               	delay:
+  13               	.LFB0:
+  14               		.file 1 "main.c"
+   1:main.c        **** #include <avr/io.h>
+   2:main.c        **** #define setbit(port,bit)  port|=(1<<bit)
+   3:main.c        **** #define clrbit(port,bit)  port&=~(1<<bit)
+   4:main.c        **** void delay(int t)
+   5:main.c        **** {
+  15               		.loc 1 5 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  22               	.LBB2:
+   6:main.c        **** 	for(int i=0;i<t;i++)
+  23               		.loc 1 6 0
+  24 0000 40E0      		ldi r20,0
+  25 0002 50E0      		ldi r21,0
+  26               	.LVL1:
+  27               	.L2:
+  28               		.loc 1 6 0 is_stmt 0 discriminator 1
+  29 0004 4817      		cp r20,r24
+  30 0006 5907      		cpc r21,r25
+  31 0008 04F4      		brge .L1
+  32               		.loc 1 6 0
+  33 000a 20E0      		ldi r18,0
+  34 000c 36E0      		ldi r19,lo8(6)
+  35               	.L5:
+  36               	.LVL2:
+  37               	.LBB3:
+   7:main.c        **** 	{
+   8:main.c        **** 		for(int s=0;s<1536;s++)
+   9:main.c        **** 		{
+  10:main.c        **** 		asm("nop");	
+  38               		.loc 1 10 0 is_stmt 1 discriminator 2
+  39               	/* #APP */
+  40               	 ;  10 "main.c" 1
+  41 000e 0000      		nop
+  42               	 ;  0 "" 2
+  43               	.LVL3:
+  44               	/* #NOAPP */
+  45 0010 2150      		subi r18,1
+  46 0012 3109      		sbc r19,__zero_reg__
+  47               	.LVL4:
+   8:main.c        **** 		for(int s=0;s<1536;s++)
+  48               		.loc 1 8 0 discriminator 2
+  49 0014 2115      		cp r18,__zero_reg__
+  50 0016 3105      		cpc r19,__zero_reg__
+  51 0018 01F4      		brne .L5
+  52               	.LBE3:
+   6:main.c        **** 	for(int i=0;i<t;i++)
+  53               		.loc 1 6 0
+  54 001a 4F5F      		subi r20,-1
+  55 001c 5F4F      		sbci r21,-1
+  56               	.LVL5:
+  57 001e 00C0      		rjmp .L2
+  58               	.LVL6:
+  59               	.L1:
+  60 0020 0895      		ret
+  61               	.LBE2:
+  62               		.cfi_endproc
+  63               	.LFE0:
+  65               		.section	.text.startup,"ax",@progbits
+  66               	.global	main
+  68               	main:
+  69               	.LFB1:
+  11:main.c        **** 		}
+  12:main.c        **** 	}
+  13:main.c        **** }
+  14:main.c        **** void main(void)
+  15:main.c        **** {
+  70               		.loc 1 15 0
+  71               		.cfi_startproc
+  72               	/* prologue: function */
+  73               	/* frame size = 0 */
+  74               	/* stack size = 0 */
+  75               	.L__stack_usage = 0
+  16:main.c        **** 	DDRD=0xFF;
+  76               		.loc 1 16 0
+  77 0000 8FEF      		ldi r24,lo8(-1)
+  78 0002 8AB9      		out 0xa,r24
+  17:main.c        **** 	PORTD=0x00;
+  79               		.loc 1 17 0
+  80 0004 1BB8      		out 0xb,__zero_reg__
+  81               	.L8:
+  18:main.c        **** 	while(1)
+  19:main.c        **** 	{
+  20:main.c        **** 		setbit(PORTD,0);
+  82               		.loc 1 20 0 discriminator 1
+  83 0006 589A      		sbi 0xb,0
+  21:main.c        **** 		delay(1000);
+  84               		.loc 1 21 0 discriminator 1
+  85 0008 88EE      		ldi r24,lo8(-24)
+  86 000a 93E0      		ldi r25,lo8(3)
+  87 000c 00D0      		rcall delay
+  88               	.LVL7:
+  22:main.c        **** 		clrbit(PORTD,0);
+  89               		.loc 1 22 0 discriminator 1
+  90 000e 5898      		cbi 0xb,0
+  23:main.c        **** 		delay(1000);
+  91               		.loc 1 23 0 discriminator 1
+  92 0010 88EE      		ldi r24,lo8(-24)
+  93 0012 93E0      		ldi r25,lo8(3)
+  94 0014 00D0      		rcall delay
+  95               	.LVL8:
+  96 0016 00C0      		rjmp .L8
+  97               		.cfi_endproc
+  98               	.LFE1:
+ 100               		.text
+ 101               	.Letext0:
+ 102               		.file 2 "/usr/lib/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccGZXmNG.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccGZXmNG.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccGZXmNG.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccGZXmNG.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccGZXmNG.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccGZXmNG.s:12     .text:0000000000000000 delay
+     /tmp/ccGZXmNG.s:68     .text.startup:0000000000000000 main
+
+NO UNDEFINED SYMBOLS

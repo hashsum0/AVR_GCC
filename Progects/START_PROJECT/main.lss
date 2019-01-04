@@ -1,0 +1,148 @@
+
+main.elf:     формат файла elf32-avr
+
+Разделы:
+Инд Имя           Размер    VMA       LMA       Файл      Вырав
+  0 .data         00000000  00800100  00000084  000000f8  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000084  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .stab         000006cc  00000000  00000000  000000f8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      00000054  00000000  00000000  000007c4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .comment      00000011  00000000  00000000  00000818  2**0
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000028  00000000  00000000  00000829  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000010d  00000000  00000000  00000851  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000000b6  00000000  00000000  0000095e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   0000008b  00000000  00000000  00000a14  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000034  00000000  00000000  00000aa0  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000000ef  00000000  00000000  00000ad4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    0000005f  00000000  00000000  00000bc3  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000018  00000000  00000000  00000c22  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Дизассемблирование раздела .text:
+
+00000000 <__vectors>:
+   0:	19 c0       	rjmp	.+50     	; 0x34 <__ctors_end>
+   2:	20 c0       	rjmp	.+64     	; 0x44 <__bad_interrupt>
+   4:	1f c0       	rjmp	.+62     	; 0x44 <__bad_interrupt>
+   6:	1e c0       	rjmp	.+60     	; 0x44 <__bad_interrupt>
+   8:	1d c0       	rjmp	.+58     	; 0x44 <__bad_interrupt>
+   a:	1c c0       	rjmp	.+56     	; 0x44 <__bad_interrupt>
+   c:	1b c0       	rjmp	.+54     	; 0x44 <__bad_interrupt>
+   e:	1a c0       	rjmp	.+52     	; 0x44 <__bad_interrupt>
+  10:	19 c0       	rjmp	.+50     	; 0x44 <__bad_interrupt>
+  12:	18 c0       	rjmp	.+48     	; 0x44 <__bad_interrupt>
+  14:	17 c0       	rjmp	.+46     	; 0x44 <__bad_interrupt>
+  16:	16 c0       	rjmp	.+44     	; 0x44 <__bad_interrupt>
+  18:	15 c0       	rjmp	.+42     	; 0x44 <__bad_interrupt>
+  1a:	14 c0       	rjmp	.+40     	; 0x44 <__bad_interrupt>
+  1c:	13 c0       	rjmp	.+38     	; 0x44 <__bad_interrupt>
+  1e:	12 c0       	rjmp	.+36     	; 0x44 <__bad_interrupt>
+  20:	11 c0       	rjmp	.+34     	; 0x44 <__bad_interrupt>
+  22:	10 c0       	rjmp	.+32     	; 0x44 <__bad_interrupt>
+  24:	0f c0       	rjmp	.+30     	; 0x44 <__bad_interrupt>
+  26:	0e c0       	rjmp	.+28     	; 0x44 <__bad_interrupt>
+  28:	0d c0       	rjmp	.+26     	; 0x44 <__bad_interrupt>
+  2a:	0c c0       	rjmp	.+24     	; 0x44 <__bad_interrupt>
+  2c:	0b c0       	rjmp	.+22     	; 0x44 <__bad_interrupt>
+  2e:	0a c0       	rjmp	.+20     	; 0x44 <__bad_interrupt>
+  30:	09 c0       	rjmp	.+18     	; 0x44 <__bad_interrupt>
+  32:	08 c0       	rjmp	.+16     	; 0x44 <__bad_interrupt>
+
+00000034 <__ctors_end>:
+  34:	11 24       	eor	r1, r1
+  36:	1f be       	out	0x3f, r1	; 63
+  38:	cf ef       	ldi	r28, 0xFF	; 255
+  3a:	d2 e0       	ldi	r29, 0x02	; 2
+  3c:	de bf       	out	0x3e, r29	; 62
+  3e:	cd bf       	out	0x3d, r28	; 61
+  40:	13 d0       	rcall	.+38     	; 0x68 <main>
+  42:	1e c0       	rjmp	.+60     	; 0x80 <_exit>
+
+00000044 <__bad_interrupt>:
+  44:	dd cf       	rjmp	.-70     	; 0x0 <__vectors>
+
+00000046 <delay>:
+#include <avr/io.h>
+#define setbit(port,bit)  port|=(1<<bit)
+#define clrbit(port,bit)  port&=~(1<<bit)
+void delay(int t)
+{
+	for(int i=0;i<t;i++)
+  46:	40 e0       	ldi	r20, 0x00	; 0
+  48:	50 e0       	ldi	r21, 0x00	; 0
+  4a:	48 17       	cp	r20, r24
+  4c:	59 07       	cpc	r21, r25
+  4e:	5c f4       	brge	.+22     	; 0x66 <delay+0x20>
+  50:	20 e0       	ldi	r18, 0x00	; 0
+  52:	36 e0       	ldi	r19, 0x06	; 6
+	{
+		for(int s=0;s<1536;s++)
+		{
+		asm("nop");	
+  54:	00 00       	nop
+  56:	21 50       	subi	r18, 0x01	; 1
+  58:	31 09       	sbc	r19, r1
+#define clrbit(port,bit)  port&=~(1<<bit)
+void delay(int t)
+{
+	for(int i=0;i<t;i++)
+	{
+		for(int s=0;s<1536;s++)
+  5a:	21 15       	cp	r18, r1
+  5c:	31 05       	cpc	r19, r1
+  5e:	d1 f7       	brne	.-12     	; 0x54 <delay+0xe>
+#include <avr/io.h>
+#define setbit(port,bit)  port|=(1<<bit)
+#define clrbit(port,bit)  port&=~(1<<bit)
+void delay(int t)
+{
+	for(int i=0;i<t;i++)
+  60:	4f 5f       	subi	r20, 0xFF	; 255
+  62:	5f 4f       	sbci	r21, 0xFF	; 255
+  64:	f2 cf       	rjmp	.-28     	; 0x4a <delay+0x4>
+  66:	08 95       	ret
+
+00000068 <main>:
+		}
+	}
+}
+void main(void)
+{
+	DDRD=0xFF;
+  68:	8f ef       	ldi	r24, 0xFF	; 255
+  6a:	8a b9       	out	0x0a, r24	; 10
+	PORTD=0x00;
+  6c:	1b b8       	out	0x0b, r1	; 11
+	while(1)
+	{
+		setbit(PORTD,0);
+  6e:	58 9a       	sbi	0x0b, 0	; 11
+		delay(1000);
+  70:	88 ee       	ldi	r24, 0xE8	; 232
+  72:	93 e0       	ldi	r25, 0x03	; 3
+  74:	e8 df       	rcall	.-48     	; 0x46 <delay>
+		clrbit(PORTD,0);
+  76:	58 98       	cbi	0x0b, 0	; 11
+		delay(1000);
+  78:	88 ee       	ldi	r24, 0xE8	; 232
+  7a:	93 e0       	ldi	r25, 0x03	; 3
+  7c:	e4 df       	rcall	.-56     	; 0x46 <delay>
+  7e:	f7 cf       	rjmp	.-18     	; 0x6e <main+0x6>
+
+00000080 <_exit>:
+  80:	f8 94       	cli
+
+00000082 <__stop_program>:
+  82:	ff cf       	rjmp	.-2      	; 0x82 <__stop_program>

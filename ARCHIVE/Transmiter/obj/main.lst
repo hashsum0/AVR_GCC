@@ -1,0 +1,475 @@
+   1               		.file	"main.c"
+   2               	__SP_L__ = 0x3d
+   3               	__SREG__ = 0x3f
+   4               	__tmp_reg__ = 0
+   5               	__zero_reg__ = 1
+   6               		.text
+   7               	.Ltext0:
+   8               		.cfi_sections	.debug_frame
+   9               	.global	delay
+  11               	delay:
+  12               	.LFB0:
+  13               		.file 1 "main.c"
+   1:main.c        **** #include <avr/io.h>
+   2:main.c        **** #define sbi(port, bit) port |= (1<<bit)
+   3:main.c        **** #define cbi(port, bit) port &=~ (1<<bit)
+   4:main.c        **** 
+   5:main.c        **** 
+   6:main.c        **** void delay(int t)
+   7:main.c        **** {
+  14               		.loc 1 7 1
+  15               		.cfi_startproc
+  16 0000 CF93      		push r28
+  17               	.LCFI0:
+  18               		.cfi_def_cfa_offset 3
+  19               		.cfi_offset 28, -2
+  20 0002 DF93      		push r29
+  21               	.LCFI1:
+  22               		.cfi_def_cfa_offset 4
+  23               		.cfi_offset 29, -3
+  24 0004 CDB7      		in r28,__SP_L__
+  25 0006 DD27      		clr r29
+  26               	.LCFI2:
+  27               		.cfi_def_cfa_register 28
+  28 0008 C650      		subi r28,lo8(-(-6))
+  29               	.LCFI3:
+  30               		.cfi_def_cfa_offset 10
+  31 000a CDBF      		out __SP_L__,r28
+  32               	/* prologue: function */
+  33               	/* frame size = 6 */
+  34               	/* stack size = 8 */
+  35               	.L__stack_usage = 8
+  36 000c 9E83      		std Y+6,r25
+  37 000e 8D83      		std Y+5,r24
+  38               	.LBB2:
+   8:main.c        **** 	for(int i=0;i<t;i++)
+  39               		.loc 1 8 10
+  40 0010 1A82      		std Y+2,__zero_reg__
+  41 0012 1982      		std Y+1,__zero_reg__
+  42               		.loc 1 8 2
+  43 0014 00C0      		rjmp .L2
+  44               	.L5:
+  45               	.LBB3:
+   9:main.c        **** 	{
+  10:main.c        **** 		for(int s=0;s<227;s++)//464-468uS (200 при 8000000мгц)
+  46               		.loc 1 10 11
+  47 0016 1C82      		std Y+4,__zero_reg__
+  48 0018 1B82      		std Y+3,__zero_reg__
+  49               		.loc 1 10 3
+  50 001a 00C0      		rjmp .L3
+  51               	.L4:
+  11:main.c        **** 		{
+  12:main.c        **** 		asm("nop");	
+  52               		.loc 1 12 3 discriminator 3
+  53               	/* #APP */
+  54               	 ;  12 "main.c" 1
+  55 001c 0000      		nop
+  56               	 ;  0 "" 2
+  10:main.c        **** 		{
+  57               		.loc 1 10 22 discriminator 3
+  58               	/* #NOAPP */
+  59 001e 8B81      		ldd r24,Y+3
+  60 0020 9C81      		ldd r25,Y+4
+  61 0022 0196      		adiw r24,1
+  62 0024 9C83      		std Y+4,r25
+  63 0026 8B83      		std Y+3,r24
+  64               	.L3:
+  10:main.c        **** 		{
+  65               		.loc 1 10 3 discriminator 1
+  66 0028 8B81      		ldd r24,Y+3
+  67 002a 9C81      		ldd r25,Y+4
+  68 002c 833E      		cpi r24,-29
+  69 002e 9105      		cpc r25,__zero_reg__
+  70 0030 04F0      		brlt .L4
+  71               	.LBE3:
+   8:main.c        **** 	{
+  72               		.loc 1 8 19 discriminator 2
+  73 0032 8981      		ldd r24,Y+1
+  74 0034 9A81      		ldd r25,Y+2
+  75 0036 0196      		adiw r24,1
+  76 0038 9A83      		std Y+2,r25
+  77 003a 8983      		std Y+1,r24
+  78               	.L2:
+   8:main.c        **** 	{
+  79               		.loc 1 8 2 discriminator 1
+  80 003c 2981      		ldd r18,Y+1
+  81 003e 3A81      		ldd r19,Y+2
+  82 0040 8D81      		ldd r24,Y+5
+  83 0042 9E81      		ldd r25,Y+6
+  84 0044 2817      		cp r18,r24
+  85 0046 3907      		cpc r19,r25
+  86 0048 04F0      		brlt .L5
+  87               	.LBE2:
+  13:main.c        **** 		}
+  14:main.c        **** 	}
+  15:main.c        **** }
+  88               		.loc 1 15 1
+  89 004a 0000      		nop
+  90               	/* epilogue start */
+  91 004c CA5F      		subi r28,lo8(-(6))
+  92 004e CDBF      		out __SP_L__,r28
+  93 0050 DF91      		pop r29
+  94 0052 CF91      		pop r28
+  95 0054 0895      		ret
+  96               		.cfi_endproc
+  97               	.LFE0:
+  99               	.global	startbit
+ 101               	startbit:
+ 102               	.LFB1:
+  16:main.c        **** 
+  17:main.c        **** void startbit(void)
+  18:main.c        **** {
+ 103               		.loc 1 18 1
+ 104               		.cfi_startproc
+ 105 0056 CF93      		push r28
+ 106               	.LCFI4:
+ 107               		.cfi_def_cfa_offset 3
+ 108               		.cfi_offset 28, -2
+ 109 0058 DF93      		push r29
+ 110               	.LCFI5:
+ 111               		.cfi_def_cfa_offset 4
+ 112               		.cfi_offset 29, -3
+ 113 005a CDB7      		in r28,__SP_L__
+ 114 005c DD27      		clr r29
+ 115               	.LCFI6:
+ 116               		.cfi_def_cfa_register 28
+ 117               	/* prologue: function */
+ 118               	/* frame size = 0 */
+ 119               	/* stack size = 2 */
+ 120               	.L__stack_usage = 2
+  19:main.c        ****         sbi(PORTB,0);
+ 121               		.loc 1 19 9
+ 122 005e 88E3      		ldi r24,lo8(56)
+ 123 0060 90E0      		ldi r25,0
+ 124 0062 FC01      		movw r30,r24
+ 125 0064 2081      		ld r18,Z
+ 126 0066 88E3      		ldi r24,lo8(56)
+ 127 0068 90E0      		ldi r25,0
+ 128 006a 2160      		ori r18,lo8(1)
+ 129 006c FC01      		movw r30,r24
+ 130 006e 2083      		st Z,r18
+  20:main.c        ****         delay(5);
+ 131               		.loc 1 20 9
+ 132 0070 85E0      		ldi r24,lo8(5)
+ 133 0072 90E0      		ldi r25,0
+ 134 0074 00D0      		rcall delay
+  21:main.c        ****         cbi(PORTB,0);
+ 135               		.loc 1 21 9
+ 136 0076 88E3      		ldi r24,lo8(56)
+ 137 0078 90E0      		ldi r25,0
+ 138 007a FC01      		movw r30,r24
+ 139 007c 2081      		ld r18,Z
+ 140 007e 88E3      		ldi r24,lo8(56)
+ 141 0080 90E0      		ldi r25,0
+ 142 0082 2E7F      		andi r18,lo8(-2)
+ 143 0084 FC01      		movw r30,r24
+ 144 0086 2083      		st Z,r18
+  22:main.c        ****         delay(5);
+ 145               		.loc 1 22 9
+ 146 0088 85E0      		ldi r24,lo8(5)
+ 147 008a 90E0      		ldi r25,0
+ 148 008c 00D0      		rcall delay
+  23:main.c        ****         sbi(PORTB,0);
+ 149               		.loc 1 23 9
+ 150 008e 88E3      		ldi r24,lo8(56)
+ 151 0090 90E0      		ldi r25,0
+ 152 0092 FC01      		movw r30,r24
+ 153 0094 2081      		ld r18,Z
+ 154 0096 88E3      		ldi r24,lo8(56)
+ 155 0098 90E0      		ldi r25,0
+ 156 009a 2160      		ori r18,lo8(1)
+ 157 009c FC01      		movw r30,r24
+ 158 009e 2083      		st Z,r18
+  24:main.c        ****         delay(100);
+ 159               		.loc 1 24 9
+ 160 00a0 84E6      		ldi r24,lo8(100)
+ 161 00a2 90E0      		ldi r25,0
+ 162 00a4 00D0      		rcall delay
+  25:main.c        ****         cbi(PORTB,0);
+ 163               		.loc 1 25 9
+ 164 00a6 88E3      		ldi r24,lo8(56)
+ 165 00a8 90E0      		ldi r25,0
+ 166 00aa FC01      		movw r30,r24
+ 167 00ac 2081      		ld r18,Z
+ 168 00ae 88E3      		ldi r24,lo8(56)
+ 169 00b0 90E0      		ldi r25,0
+ 170 00b2 2E7F      		andi r18,lo8(-2)
+ 171 00b4 FC01      		movw r30,r24
+ 172 00b6 2083      		st Z,r18
+  26:main.c        ****         delay(40);         
+ 173               		.loc 1 26 9
+ 174 00b8 88E2      		ldi r24,lo8(40)
+ 175 00ba 90E0      		ldi r25,0
+ 176 00bc 00D0      		rcall delay
+  27:main.c        **** }
+ 177               		.loc 1 27 1
+ 178 00be 0000      		nop
+ 179               	/* epilogue start */
+ 180 00c0 DF91      		pop r29
+ 181 00c2 CF91      		pop r28
+ 182 00c4 0895      		ret
+ 183               		.cfi_endproc
+ 184               	.LFE1:
+ 186               	.global	lobit
+ 188               	lobit:
+ 189               	.LFB2:
+  28:main.c        **** void lobit(void)
+  29:main.c        **** {
+ 190               		.loc 1 29 1
+ 191               		.cfi_startproc
+ 192 00c6 CF93      		push r28
+ 193               	.LCFI7:
+ 194               		.cfi_def_cfa_offset 3
+ 195               		.cfi_offset 28, -2
+ 196 00c8 DF93      		push r29
+ 197               	.LCFI8:
+ 198               		.cfi_def_cfa_offset 4
+ 199               		.cfi_offset 29, -3
+ 200 00ca CDB7      		in r28,__SP_L__
+ 201 00cc DD27      		clr r29
+ 202               	.LCFI9:
+ 203               		.cfi_def_cfa_register 28
+ 204               	/* prologue: function */
+ 205               	/* frame size = 0 */
+ 206               	/* stack size = 2 */
+ 207               	.L__stack_usage = 2
+  30:main.c        ****     sbi(PORTB,0);
+ 208               		.loc 1 30 5
+ 209 00ce 88E3      		ldi r24,lo8(56)
+ 210 00d0 90E0      		ldi r25,0
+ 211 00d2 FC01      		movw r30,r24
+ 212 00d4 2081      		ld r18,Z
+ 213 00d6 88E3      		ldi r24,lo8(56)
+ 214 00d8 90E0      		ldi r25,0
+ 215 00da 2160      		ori r18,lo8(1)
+ 216 00dc FC01      		movw r30,r24
+ 217 00de 2083      		st Z,r18
+  31:main.c        ****     delay(25);
+ 218               		.loc 1 31 5
+ 219 00e0 89E1      		ldi r24,lo8(25)
+ 220 00e2 90E0      		ldi r25,0
+ 221 00e4 00D0      		rcall delay
+  32:main.c        ****     cbi(PORTB,0);
+ 222               		.loc 1 32 5
+ 223 00e6 88E3      		ldi r24,lo8(56)
+ 224 00e8 90E0      		ldi r25,0
+ 225 00ea FC01      		movw r30,r24
+ 226 00ec 2081      		ld r18,Z
+ 227 00ee 88E3      		ldi r24,lo8(56)
+ 228 00f0 90E0      		ldi r25,0
+ 229 00f2 2E7F      		andi r18,lo8(-2)
+ 230 00f4 FC01      		movw r30,r24
+ 231 00f6 2083      		st Z,r18
+  33:main.c        ****     delay(40);     
+ 232               		.loc 1 33 5
+ 233 00f8 88E2      		ldi r24,lo8(40)
+ 234 00fa 90E0      		ldi r25,0
+ 235 00fc 00D0      		rcall delay
+  34:main.c        **** }
+ 236               		.loc 1 34 1
+ 237 00fe 0000      		nop
+ 238               	/* epilogue start */
+ 239 0100 DF91      		pop r29
+ 240 0102 CF91      		pop r28
+ 241 0104 0895      		ret
+ 242               		.cfi_endproc
+ 243               	.LFE2:
+ 245               	.global	hibit
+ 247               	hibit:
+ 248               	.LFB3:
+  35:main.c        **** void hibit(void)
+  36:main.c        **** {
+ 249               		.loc 1 36 1
+ 250               		.cfi_startproc
+ 251 0106 CF93      		push r28
+ 252               	.LCFI10:
+ 253               		.cfi_def_cfa_offset 3
+ 254               		.cfi_offset 28, -2
+ 255 0108 DF93      		push r29
+ 256               	.LCFI11:
+ 257               		.cfi_def_cfa_offset 4
+ 258               		.cfi_offset 29, -3
+ 259 010a CDB7      		in r28,__SP_L__
+ 260 010c DD27      		clr r29
+ 261               	.LCFI12:
+ 262               		.cfi_def_cfa_register 28
+ 263               	/* prologue: function */
+ 264               	/* frame size = 0 */
+ 265               	/* stack size = 2 */
+ 266               	.L__stack_usage = 2
+  37:main.c        ****     sbi(PORTB,0);
+ 267               		.loc 1 37 5
+ 268 010e 88E3      		ldi r24,lo8(56)
+ 269 0110 90E0      		ldi r25,0
+ 270 0112 FC01      		movw r30,r24
+ 271 0114 2081      		ld r18,Z
+ 272 0116 88E3      		ldi r24,lo8(56)
+ 273 0118 90E0      		ldi r25,0
+ 274 011a 2160      		ori r18,lo8(1)
+ 275 011c FC01      		movw r30,r24
+ 276 011e 2083      		st Z,r18
+  38:main.c        ****     delay(50);
+ 277               		.loc 1 38 5
+ 278 0120 82E3      		ldi r24,lo8(50)
+ 279 0122 90E0      		ldi r25,0
+ 280 0124 00D0      		rcall delay
+  39:main.c        ****     cbi(PORTB,0);
+ 281               		.loc 1 39 5
+ 282 0126 88E3      		ldi r24,lo8(56)
+ 283 0128 90E0      		ldi r25,0
+ 284 012a FC01      		movw r30,r24
+ 285 012c 2081      		ld r18,Z
+ 286 012e 88E3      		ldi r24,lo8(56)
+ 287 0130 90E0      		ldi r25,0
+ 288 0132 2E7F      		andi r18,lo8(-2)
+ 289 0134 FC01      		movw r30,r24
+ 290 0136 2083      		st Z,r18
+  40:main.c        ****     delay(40);     
+ 291               		.loc 1 40 5
+ 292 0138 88E2      		ldi r24,lo8(40)
+ 293 013a 90E0      		ldi r25,0
+ 294 013c 00D0      		rcall delay
+  41:main.c        **** }
+ 295               		.loc 1 41 1
+ 296 013e 0000      		nop
+ 297               	/* epilogue start */
+ 298 0140 DF91      		pop r29
+ 299 0142 CF91      		pop r28
+ 300 0144 0895      		ret
+ 301               		.cfi_endproc
+ 302               	.LFE3:
+ 304               	.global	stopbit
+ 306               	stopbit:
+ 307               	.LFB4:
+  42:main.c        **** void stopbit(void)
+  43:main.c        **** {
+ 308               		.loc 1 43 1
+ 309               		.cfi_startproc
+ 310 0146 CF93      		push r28
+ 311               	.LCFI13:
+ 312               		.cfi_def_cfa_offset 3
+ 313               		.cfi_offset 28, -2
+ 314 0148 DF93      		push r29
+ 315               	.LCFI14:
+ 316               		.cfi_def_cfa_offset 4
+ 317               		.cfi_offset 29, -3
+ 318 014a CDB7      		in r28,__SP_L__
+ 319 014c DD27      		clr r29
+ 320               	.LCFI15:
+ 321               		.cfi_def_cfa_register 28
+ 322               	/* prologue: function */
+ 323               	/* frame size = 0 */
+ 324               	/* stack size = 2 */
+ 325               	.L__stack_usage = 2
+  44:main.c        ****     sbi(PORTB,0);
+ 326               		.loc 1 44 5
+ 327 014e 88E3      		ldi r24,lo8(56)
+ 328 0150 90E0      		ldi r25,0
+ 329 0152 FC01      		movw r30,r24
+ 330 0154 2081      		ld r18,Z
+ 331 0156 88E3      		ldi r24,lo8(56)
+ 332 0158 90E0      		ldi r25,0
+ 333 015a 2160      		ori r18,lo8(1)
+ 334 015c FC01      		movw r30,r24
+ 335 015e 2083      		st Z,r18
+  45:main.c        ****     cbi(PORTB,0);
+ 336               		.loc 1 45 5
+ 337 0160 88E3      		ldi r24,lo8(56)
+ 338 0162 90E0      		ldi r25,0
+ 339 0164 FC01      		movw r30,r24
+ 340 0166 2081      		ld r18,Z
+ 341 0168 88E3      		ldi r24,lo8(56)
+ 342 016a 90E0      		ldi r25,0
+ 343 016c 2E7F      		andi r18,lo8(-2)
+ 344 016e FC01      		movw r30,r24
+ 345 0170 2083      		st Z,r18
+  46:main.c        ****     delay(200);
+ 346               		.loc 1 46 5
+ 347 0172 88EC      		ldi r24,lo8(-56)
+ 348 0174 90E0      		ldi r25,0
+ 349 0176 00D0      		rcall delay
+  47:main.c        **** }
+ 350               		.loc 1 47 1
+ 351 0178 0000      		nop
+ 352               	/* epilogue start */
+ 353 017a DF91      		pop r29
+ 354 017c CF91      		pop r28
+ 355 017e 0895      		ret
+ 356               		.cfi_endproc
+ 357               	.LFE4:
+ 359               	.global	main
+ 361               	main:
+ 362               	.LFB5:
+  48:main.c        **** int main(void){
+ 363               		.loc 1 48 15
+ 364               		.cfi_startproc
+ 365 0180 CF93      		push r28
+ 366               	.LCFI16:
+ 367               		.cfi_def_cfa_offset 3
+ 368               		.cfi_offset 28, -2
+ 369 0182 DF93      		push r29
+ 370               	.LCFI17:
+ 371               		.cfi_def_cfa_offset 4
+ 372               		.cfi_offset 29, -3
+ 373 0184 CDB7      		in r28,__SP_L__
+ 374 0186 DD27      		clr r29
+ 375               	.LCFI18:
+ 376               		.cfi_def_cfa_register 28
+ 377               	/* prologue: function */
+ 378               	/* frame size = 0 */
+ 379               	/* stack size = 2 */
+ 380               	.L__stack_usage = 2
+  49:main.c        ****     
+  50:main.c        ****     DDRB=0xFF;    //порт на выход
+ 381               		.loc 1 50 5
+ 382 0188 87E3      		ldi r24,lo8(55)
+ 383 018a 90E0      		ldi r25,0
+ 384               		.loc 1 50 9
+ 385 018c 2FEF      		ldi r18,lo8(-1)
+ 386 018e FC01      		movw r30,r24
+ 387 0190 2083      		st Z,r18
+  51:main.c        ****     PORTB=0x00;   //порт в ноль
+ 388               		.loc 1 51 5
+ 389 0192 88E3      		ldi r24,lo8(56)
+ 390 0194 90E0      		ldi r25,0
+ 391               		.loc 1 51 10
+ 392 0196 FC01      		movw r30,r24
+ 393 0198 1082      		st Z,__zero_reg__
+ 394               	.L11:
+  52:main.c        **** 	
+  53:main.c        ****     while(1)
+  54:main.c        ****     {
+  55:main.c        ****         
+  56:main.c        ****             startbit();
+ 395               		.loc 1 56 13 discriminator 1
+ 396 019a 00D0      		rcall startbit
+  57:main.c        ****             lobit();
+ 397               		.loc 1 57 13 discriminator 1
+ 398 019c 00D0      		rcall lobit
+  58:main.c        ****             hibit();
+ 399               		.loc 1 58 13 discriminator 1
+ 400 019e 00D0      		rcall hibit
+  59:main.c        ****             hibit();
+ 401               		.loc 1 59 13 discriminator 1
+ 402 01a0 00D0      		rcall hibit
+  56:main.c        ****             lobit();
+ 403               		.loc 1 56 13 discriminator 1
+ 404 01a2 00C0      		rjmp .L11
+ 405               		.cfi_endproc
+ 406               	.LFE5:
+ 408               	.Letext0:
+ 409               		.file 2 "/usr/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/cct7NxJN.s:2      *ABS*:000000000000003d __SP_L__
+     /tmp/cct7NxJN.s:3      *ABS*:000000000000003f __SREG__
+     /tmp/cct7NxJN.s:4      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cct7NxJN.s:5      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cct7NxJN.s:11     .text:0000000000000000 delay
+     /tmp/cct7NxJN.s:101    .text:0000000000000056 startbit
+     /tmp/cct7NxJN.s:188    .text:00000000000000c6 lobit
+     /tmp/cct7NxJN.s:247    .text:0000000000000106 hibit
+     /tmp/cct7NxJN.s:306    .text:0000000000000146 stopbit
+     /tmp/cct7NxJN.s:361    .text:0000000000000180 main
+
+NO UNDEFINED SYMBOLS
