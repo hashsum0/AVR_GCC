@@ -1,0 +1,9 @@
+не вставляя программатор в usb 
+sudo gedit /etc/udev/rules.d/41-atmega.rules
+вставить
+# Programator AVR USBasp
+SUBSYSTEM=="usb", ATTR{product}=="USBasp", ATTR{idProduct}=="05dc", ATTR{idVendor}=="16c0",GROUP="имя_пользователя" MODE="0666"
+сохроанить
+sudo usermod -a -G users имя_пользователя
+sudo reload udev
+вставляем программатор в usb пробуем.
